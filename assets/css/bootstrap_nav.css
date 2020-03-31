@@ -75,10 +75,6 @@ h3.nav-link {
   padding: 0;
   position: relative;
 }
-.list-group {
-  position: fixed;
-  height: 100vh;
-}
 
 #sidebar-container .list-group a {
   /*background-color: #a0d468;*/

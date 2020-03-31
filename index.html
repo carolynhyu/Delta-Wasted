@@ -1,192 +1,330 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
   <head>
-    <link rel="stylesheet" href="assets/css/bootstrap_nav.css" />
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-      crossorigin="anonymous"
-    />
-    <script
-      src="https://kit.fontawesome.com/cddc03767c.js"
-      crossorigin="anonymous"
-    ></script>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title></title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Muli&display=swap" rel="stylesheet">
+
+    <!-- sign up modal style sheet -->
+    <link rel="stylesheet" href="assets/css/sign_up.css">
+    <title>Landing Page</title>
+
+    <style>
+        .selector-for-some-widget {
+            box-sizing: content-box;
+        }
+        body {
+          font-family: 'Muli', sans-serif;
+        }
+        #nav-container {
+          height: 100px;
+          /* margin-bottom: 100px; */
+        }
+        #logo-container {
+          width: 200px;
+          height: 80px;
+
+          float: left;
+          position: relative;
+          top: 25px;
+        }
+        #logo-img {
+          width: 100%;
+          height: auto;
+        }
+        #login-container {
+          float: right;
+
+          position: relative;
+          top: 40px;
+        }
+        .clearfloat {
+          clear: both;
+        }
+        #header {
+          /* margin-top: 100px; */
+          height: 800px;
+
+          position: relative;
+        }
+        #header-left {
+          width: 40%;
+          height: auto;
+
+          float: left;
+          position: absolute;
+          left: 10%;
+          top: 4%;
+        }
+        #header-left button {
+          margin-top: 20px;
+        }
+        #header-right {
+          width: 60%;
+          height: auto;
+
+          float: right;
+        }
+
+/* //////////////////////////////////////////////////// */
+        /* make <h1> text size responsive */
+        @media (min-width: 500px) {  
+          h1, h3{font-size:1.4rem;} /*1rem = 16px*/
+          #header {height: 280px;}
+        }
+        
+        /* Medium devices (tablets, 768px and up) The navbar toggle appears at this breakpoint */
+        @media (min-width: 768px) {  
+          h1, h3 {font-size:2rem;} /*1rem = 16px*/
+          #header { height: 500px;}
+        }
+        
+        /* Large devices (desktops, 992px and up) */
+        @media (min-width: 992px) { 
+          h1, h3 {font-size:2.5rem;} /*1rem = 16px*/
+          #header { height: 550px; }
+        }
+        
+        /* Extra large devices (large desktops, 1200px and up) */
+        @media (min-width: 1200px) {  
+          h1 {font-size:3rem;} /*1rem = 16px*/  
+          #header { height: 650px; }  
+        }
+        h3 {
+          text-align: center;
+          color: #A0D468;
+        }
+        .icon-container {
+          width: 80px;
+          height: 100px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        .icons {
+          width: 100%;
+          height: auto;
+        }
+        .captions {
+          text-align: center;
+          font-weight: bold;
+        }
+        .body-pic {
+          width: 300px;
+          height: 436px;
+        }
+        .body-pic img {
+          width: 100%;
+          height: auto;
+        }
+        h4 {
+          color: #A0D468;
+          font-weight: bold;
+        }
+        .col p {
+          position: relative;
+          top: 60px;
+        }
+        .col h4 {
+          position: relative;
+          top: 60px;
+        }
+        #footer {
+          height: 50px;
+          line-height: 50px;
+          background-color: #A0D468;
+          text-align: center;
+        }
+        /* #nav-container {
+          position: relative;
+          top: -30px;
+        } */
+    </style>
   </head>
   <body>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-2">
-          <div
-            id="sidebar-container"
-            class="sidebar-expanded d-none d-md-block"
-          >
-            <!-- Bootstrap List Group -->
-            <ul class="list-group">
-              <!-- SECTION 1 -->
-              <div id="nav-header">
-                <li class="nav-item toggle">
-                  <h3 class="nav-link" href="#">
-                    <img id="nav-logo" src="assets/img/logo.png" alt="Wasted logo" />
-                    <span id="wasted" class="desc">Wasted</span>
-                  </h3>
-                  <p>Hey Sara!</p>
-
-                  <!-- <a id="arrow-a" href="#">
-                    <div id="arrow-container">
-                      <img id="arrow" src="img/arrow.png" alt="arrow">
-                    </div>
-                  </a> -->
-                </li>
-
-                <!-- <div>
-                    <p class="toggle">Hey Sara!</p>
-                </div> -->
-              </div>
-              <!-- nav header -->
-
-              <a
-                href="#top"
-                data-toggle="sidebar-collapse"
-                class="list-group-item list-group-item-action d-flex align-items-center"
-                style="background-color: #a0d468;"
-              >
-                <div
-                  class="d-flex w-100 justify-content-start align-items-center"
-                >
-                  <!-- <h3 class="nav-link toggle" href="#">
-                                <img id="nav-logo" src="img/logo.png" alt="Wasted logo">
-                                <span id="wasted" class="desc">Wasted</span>
-                            </h3> -->
-                  <span
-                    id="collapse-icon"
-                    class="fa fa-angle-double-left fa-2x mr-3"
-                  ></span>
-                  <span id="collapse-text" class="menu-collapsed"
-                    >Collapse</span
-                  >
-                </div>
-              </a>
-
-              <!-- SECTION 2 -->
-              <a
-                aria-expanded="false"
-                class="list-group-item list-group-item-action flex-column align-items-start"
-                id="dashboard"
-                style="background-color: #a0d468;"
-                href="dashboard.html"
-              >
-                <div
-                  class="d-flex w-100 justify-content-start align-items-center"
-                >
-                  <span class="fa fa-home fa-fw mr-3"></span>
-                  <span class="menu-collapsed">Dashboard</span>
-                </div>
-              </a>
-
-              <a
-                aria-expanded="false"
-                class="list-group-item list-group-item-action flex-column align-items-start"
-                style="background-color: #a0d468;"
-                href="fridge-list.html"
-              >
-                <div
-                  class="d-flex w-100 justify-content-start align-items-center"
-                >
-                  <span class="fa fa-igloo fa-fw mr-3"></span>
-                  <span class="menu-collapsed">Fridge</span>
-                </div>
-              </a>
-
-              <a
-                aria-expanded="false"
-                class="list-group-item list-group-item-action flex-column align-items-start"
-                style="background-color: #a0d468;"
-                href="#"
-              >
-                <div
-                  class="d-flex w-100 justify-content-start align-items-center"
-                >
-                  <span class="fa fa-utensils fa-fw mr-3"></span>
-                  <span class="menu-collapsed">Recipes</span>
-                </div>
-              </a>
-
-              <!-- <a
-                aria-expanded="false"
-                class="list-group-item list-group-item-action flex-column align-items-start"
-                style="background-color: #a0d468;"
-                href="#"
-              >
-                <div
-                  class="d-flex w-100 justify-content-start align-items-center"
-                >
-                  <span class="fa fa-dashboard fa-fw mr-3"></span>
-                  <span class="menu-collapsed">Reports</span>
-                </div>
-              </a> -->
-
-              <!-- SECTION 3 -->
-              <a
-                aria-expanded="false"
-                class="list-group-item list-group-item-action flex-column align-items-start"
-                id="my-acct"
-                style="background-color: #a0d468;"
-                href="account_page.html"
-              >
-                <div
-                  class="d-flex w-100 justify-content-start align-items-center"
-                >
-                  <span class="fa fa-user fa-fw mr-3"></span>
-                  <span class="menu-collapsed">My Account</span>
-                </div>
-              </a>
-
-              <a
-                aria-expanded="false"
-                class="list-group-item list-group-item-action flex-column align-items-start"
-                style="background-color: #a0d468;"
-                href="login.html"
-              >
-                <div
-                  class="d-flex w-100 justify-content-start align-items-center"
-                >
-                  <span class="fas fa-sign-out-alt fa-fw mr-3"></span>
-                  <span class="menu-collapsed">Log Out</span>
-                </div>
-              </a>
-
-              <!-- ????? -->
-
-              <!-- add ingredients -->
-              <div id="nav-add">
-                <li class="nav-item" id="nav-add-li">
-                  <a id="nav-add-a" class="nav-link" href="add-ingredients.html">
-                    <img src="assets/img/plus.png" alt="Add ingredients" />
-                    <span class="desc toggle">Add Ingredient</span>
-                  </a>
-                </li>
-              </div>
-              <!-- nav-add  -->
-            </ul>
-            <!-- List Group END-->
-          </div>
-          <!-- sidebar-container  END -->
-          <!-- MAIN -->
+      <div id="nav-container" class="container mb-5">
+        <div id="logo-container">
+          <img id="logo-img" class="img-fluid" src="assets/img/homepage/logo.png" alt="logo">
         </div>
 
-        <!-- MAIN CONTENT FOR EACH PAGE -->
+        <div id="login-container">
+          <button type="button" class="btn btn-outline-success" onclick="document.getElementById('id01').style.display='block'">Sign up</button>
+          <button type="button" class="btn btn-success" onclick="document.getElementById('id02').style.display='block'">Log in</button>
+        </div>
+      </div>
 
-        <div class="col-md-10">
-          <div class="main-content"></div>
+      <div id="header" class="img-fluid container-fluid mt-5">
+        <div id="header-left">
+          <h1 class="$font-size-base mb-3">Keep track of your fridge to save money & eliminate food waste</h1>
+          <a class="btn btn-success" href="dashboard.php" role="button">START SAVING</a>
+        </div>
+
+        <div id="header-right">
+          <img id="food" class="img-fluid" src="assets/img/homepage/food.png" alt="food">
+        </div>
+
+      </div>
+
+    <div class="clearfloat"></div>
+
+    <div class="container">
+      <h3 class="mt-5">How to get started?</h3>
+      <div class="row mt-5">
+
+        <div class="col">
+          <div class="icon-container">
+            <img class="icons" src="assets/img/homepage/harvest.png" alt="ingredients">
+          </div>
+          <div class="captions">Select Ingredients</div>
+        </div>
+
+        <div class="col">
+          <div class="icon-container">
+            <img class="icons" src="assets/img/homepage/shopping-list.png" alt="list">
+          </div>
+          <div class="captions">Add to Fridge List</div>
+        </div>
+
+        <div class="col">
+          <div class="icon-container">
+            <img class="icons" src="assets/img/homepage/bell.png" alt="bell">
+          </div>
+          <div class="captions">Receive Reminders</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col body-pic">
+          <img src="assets/img/homepage/list.png" alt="list">
+        </div>
+        <div class="col">
+          <h4>My Fridge</h4>
+          <p>A clear display of ingredient name, quantity, expiration date and a calendar specified with expiring food on each day</p>
+        </div>
+        <div class="w-100"></div>
+        <div class="col">
+          <h4>Recipes</h4>
+          <p>We curate recipe that are both delicious and easy-to-cook for your inspiration!</p>
+        </div>
+        <div class="col body-pic">
+          <img src="assets/img/homepage/recipe.png" alt="recipe">
+        </div>
+        <div class="w-100"></div>
+        <div class="col body-pic">
+          <img src="assets/img/homepage/report.png" alt="report">
+        </div>
+        <div class="col">
+          <h4>Reports</h4>
+          <p>Food wastings, saving, goals...our reports feature helps you understanding your consuming habit and planning future saving</p>
         </div>
       </div>
     </div>
 
-    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <div class="container-fluid" id="footer">
+      2020 @ University of Southern California
+    </div>
 
-    <script src="assets/js/core.js"></script>
+<!-- The Modal (contains the Sign Up form) -->
+<div id="id01" class="modal">
+  <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal"></span>
+  <form class="modal-content" action="/action_page.php">
+    <div class="container">
+      <h1>Sign Up</h1>
+      <p>Please fill in this form to create an account.</p>
+      <hr>
+      <label for="name"><b>First Name</b></label>
+      <input type="text" placeholder="Enter First Name" name="name" required>
+
+      <label for="name"><b>Last Name</b></label>
+      <input type="text" placeholder="Enter Last Name" name="name" required>
+
+      <label for="email"><b>Email</b></label>
+      <input type="text" placeholder="Enter Email" name="email" required>
+
+      <label for="psw"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="psw" required>
+
+      <label for="psw-repeat"><b>Repeat Password</b></label>
+      <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+
+      <label>
+        <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+      </label>
+
+      <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
+
+      <div class="clearfix">
+        <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+        <button type="submit" class="signup">Sign Up</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- The Modal (contains the Log In form) -->
+<div id="id02" class="modal">
+  <span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close Modal"></span>
+  <form class="modal-content" action="/action_page.php">
+    <div class="container">
+      <h1>Log In</h1>
+      <!-- <p>Please fill in this form to create an account.</p> -->
+      <hr>
+
+      <label for="email"><b>Email</b></label>
+      <input type="text" placeholder="Enter Email" name="email" required>
+
+      <label for="psw"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="psw" required>
+
+      <label>
+        <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+      </label>
+
+
+      <div class="clearfix">
+        <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+        <button type="submit" class="signup">Log In</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+<!-- Sign up modal -->
+    <script>
+      // Get the modal
+      var modal = document.getElementById('id01');
+      
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function(event) {
+          if (event.target == modal) {
+              modal.style.display = "none";
+          }
+      }
+      </script>
+
+<!-- Log in modal -->
+    <script>
+      // Get the modal
+      var modal2 = document.getElementById('id02');
+      
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function(event) {
+          if (event.target == modal2) {
+              modal2.style.display = "none";
+          }
+      }
+    </script>
   </body>
 </html>
