@@ -175,7 +175,7 @@
         <div id="header-left">
           <h1 class="$font-size-base mb-3">Keep track of your fridge to save money & eliminate food waste</h1>
 
-          <a class="btn btn-success" href="dashboard.php" role="button">START SAVING</a>
+          <a class="btn btn-success" href="dashboard.php" role="button" onclick="document.getElementById('id02').style.display='block'">START SAVING</a>
           
         </div>
 
@@ -244,12 +244,12 @@
     </div>
 
     <div class="container-fluid" id="footer">
-      2020 @ University of Southern California
+      2020 &copy; University of Southern California
     </div>
 
 <!-- The Modal (contains the Sign Up form) -->
 <div id="id01" class="modal">
-  <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal"></span>
+  <!-- <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal"></span> -->
   <form class="modal-content" action="/action_page.php">
     <div class="container">
       <h1>Sign Up</h1>
@@ -270,9 +270,9 @@
       <label for="psw-repeat"><b>Repeat Password</b></label>
       <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
 
-      <label>
+      <!-- <label>
         <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
-      </label>
+      </label> -->
 
       <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
 
@@ -303,9 +303,12 @@
         <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
       </label>
 
+    <!-- <p>Don't have an account? <button type="button" onclick="document.getElementById('id01').style.display='block'">Sign up</button></p> -->
+    <p>Don't have an account?<span></span><a href="#" onclick="document.getElementById('id02').style.display='none'; document.getElementById('id01').style.display='block'">Sign up</a></p>
+
 
       <div class="clearfix">
-        <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+        <button type="button" onclick="document.getElementById('id02').style.display='none'" class="cancelbtn">Cancel</button>
         <button type="submit" class="signup">Log In</button>
       </div>
     </div>
@@ -319,29 +322,25 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
 <!-- Sign up modal -->
-    <script>
-      // Get the modal
+    <!-- <script>
       var modal = document.getElementById('id01');
       
-      // When the user clicks anywhere outside of the modal, close it
       window.onclick = function(event) {
           if (event.target == modal) {
               modal.style.display = "none";
           }
       }
-      </script>
+      </script> -->
 
 <!-- Log in modal -->
-    <script>
-      // Get the modal
+    <!-- <script>
       var modal2 = document.getElementById('id02');
       
-      // When the user clicks anywhere outside of the modal, close it
       window.onclick = function(event) {
           if (event.target == modal2) {
               modal2.style.display = "none";
           }
-      }
+      }  -->
     </script>
   </body>
 </html>
