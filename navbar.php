@@ -13,6 +13,17 @@
       crossorigin="anonymous"
     ></script>
 
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="assets/css/dashboard_stylesheet.css" />
+    <link rel="stylesheet" href="assets/css/stylesheet.css" />
+
     <title></title>
   </head>
   <body>
@@ -34,7 +45,7 @@
                     <img id="nav-logo" src="assets/img/logo.png" alt="Wasted logo" />
                     <span id="wasted" class="desc">Wasted</span>
                   </h3>
-                  <p>Hey Sara!</p>
+                  <p>Hey <?php echo $row['user_firstname'];?>!</p>
 
                   <!-- <a id="arrow-a" href="#">
                     <div id="arrow-container">
@@ -157,7 +168,7 @@
                 aria-expanded="false"
                 class="list-group-item list-group-item-action flex-column align-items-start"
                 style="background-color: #a0d468;"
-                href="index.php"
+                href="logout.php"
               >
                 <div
                   class="d-flex w-100 justify-content-start align-items-center"

@@ -1,74 +1,10 @@
 <?php
-
   session_start();
-
-  require "config/config.php";
-
-  $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-
-  if ( $mysqli->connect_errno ) {
-    echo $mysqli->connect_error;
-    exit();
-  }
-
-  $mysqli->set_charset('utf8');
-
-
-//******************* KR's CODE **********************//
-  // If not logged in
-if ( !isset( $_SESSION['login'] ) || empty( $_SESSION['login'] ) ) {
-
-    // If user tried logging in, check if everything is filled
-    if ( !isset( $_POST['username'] ) || empty($_POST['username']) || !isset( $_POST['password'] ) || empty($_POST['password']) ) {
-            $error = "Please fill out username and password.";
-    }
-    else {
-        // If user filled in everything
-        $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        if ( $mysqli->connect_errno ) {
-            echo $mysqli->connect_error;
-            exit();
-        }
-        $mysqli->set_charset('utf8');
-
-        // Check if username already exists
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-
-        $sql_check = "SELECT * FROM users WHERE user_email='$email' AND user_password='$password';";
-        $results_check = $mysqli->query($sql_check);
-        if ( !$results_check ) {
-            echo $mysqli->error;
-            $mysqli->close();
-            exit();
-        }
-        $results_check_num = $results_check->num_rows;
-        
-        // When email exists
-        if ($results_check_num == 1) {
-            $_SESSION['login'] = true;
-            $_SESSION['email'] = $_POST['email'];
-            $_SESSION['password'] = $_POST['password'];
-            header('Location: search.php');
-        }
-        // When email doesn't exist
-        else {
-             $error = "Incorrect email or password.";
-        }
-
-    } 
-
-}
-// If logged in --> Search page
-else {
-    header('Location: search.php');
-    $mysqli->close();
-}
-
+  session_destroy();
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -164,7 +100,7 @@ else {
           #header { height: 650px; }  
         }
         h3 {
-          text-align: center;
+          text-align: left;
           color: #A0D468;
         }
         .icon-container {
@@ -213,23 +149,25 @@ else {
         } */
     </style>
   </head>
-  <body>
-      <div id="nav-container" class="container mb-5">
+
+<body>  
+
+<div id="nav-container" class="container mb-5">
         <div id="logo-container">
-          <img id="logo-img" class="img-fluid" src="assets/img/homepage/logo.png" alt="logo">
+          <a href="index.php"><img id="logo-img" class="img-fluid" src="assets/img/homepage/logo.png" alt="logo"></a>
         </div>
 
         <div id="login-container">
           <a href="sign-up.php"><button type="button" class="btn btn-outline-success" onclick="document.getElementById('id01').style.display='block'">Sign up</button></a>
           <a href="login.php"><button type="button" class="btn btn-success" onclick="document.getElementById('id02').style.display='block'">Log in</button></a>
         </div>
-      </div>
+</div>
 
-      <div id="header" class="img-fluid container-fluid mt-5">
+<div id="header" class="img-fluid container-fluid mt-5">
         <div id="header-left">
-          <h1 class="$font-size-base mb-3">Keep track of your fridge to save money & eliminate food waste</h1>
+          <h1 class="$font-size-base mb-3">You have successfully logged out.</h1>
 
-          <a class="btn btn-success" href="index.php#saving" role="button" onclick="document.getElementById('id02').style.display='block'">START SAVING</a>
+           <a class="btn btn-success" href="login.php" role="button" onclick="document.getElementById('id02').style.display='block'">LOG BACK IN</a>
           
         </div>
 
@@ -237,74 +175,9 @@ else {
           <img id="food" class="img-fluid" src="assets/img/homepage/food.png" alt="food">
         </div>
 
-      </div>
+</div>
 
-    <div class="clearfloat"></div>
-
-    <div class="container">
-      <h3 id="saving" class="mt-5">How to get started?</h3>
-      <div class="row mt-5">
-
-        <div class="col">
-          <div class="icon-container">
-            <img class="icons" src="assets/img/homepage/harvest.png" alt="ingredients">
-          </div>
-          <div class="captions">Select Ingredients</div>
-        </div>
-
-        <div class="col">
-          <div class="icon-container">
-            <img class="icons" src="assets/img/homepage/shopping-list.png" alt="list">
-          </div>
-          <div class="captions">Add to Fridge List</div>
-        </div>
-
-        <div class="col">
-          <div class="icon-container">
-            <img class="icons" src="assets/img/homepage/bell.png" alt="bell">
-          </div>
-          <div class="captions">Receive Reminders</div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="container mt-5">
-      <div class="row">
-        <div class="col body-pic">
-          <img src="assets/img/homepage/list.png" alt="list">
-        </div>
-        <div class="col">
-          <h4>My Fridge</h4>
-          <p>A clear display of ingredient name, quantity, expiration date and a calendar specified with expiring food on each day</p>
-        </div>
-        <div class="w-100"></div>
-        <div class="col">
-          <h4>Recipes</h4>
-          <p>We curate recipe that are both delicious and easy-to-cook for your inspiration!</p>
-        </div>
-        <div class="col body-pic">
-          <img src="assets/img/homepage/recipe.png" alt="recipe">
-        </div>
-        <div class="w-100"></div>
-        <div class="col body-pic">
-          <img src="assets/img/homepage/report.png" alt="report">
-        </div>
-        <div class="col">
-          <h4>Reports</h4>
-          <p>Food wastings, saving, goals...our reports feature helps you understanding your consuming habit and planning future saving</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="container-fluid" id="footer">
-      2020 &copy; University of Southern California
-    </div>
-
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+ <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
@@ -329,5 +202,5 @@ else {
           }
       }  -->
     </script>
-  </body>
+</body>
 </html>
