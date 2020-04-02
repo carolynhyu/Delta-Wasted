@@ -170,7 +170,7 @@
     <title>Wasted | Fridge List</title>
   </head>
   <body>
-    <?php include ('navbar.php'); ?>
+    <?php include 'navbar.php'; ?>
         <!-- MAIN CONTENT FOR EACH PAGE -->
 
         <div class="col-md-10 offset-md-2 hidePadding">
