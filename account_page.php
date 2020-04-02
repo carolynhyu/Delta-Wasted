@@ -11,6 +11,24 @@
 
   $mysqli->set_charset('utf8');
 
+
+  $email = $_SESSION['user_email'];
+  $password = $_SESSION['user_password'];
+
+  $sql_user = "SELECT * FROM users WHERE user_email='$email' AND user_password='$password';";
+        $results_user = $mysqli->query($sql_user);
+        if ( !$results_user ) {
+            echo $mysqli->error;
+            $mysqli->close();
+            exit();
+        }
+
+  $row = $results_user->fetch_assoc();
+
+  $user_id = $row['user_id'];
+
+  $mysqli->close();
+
 ?>
 
 <!DOCTYPE html>
@@ -220,7 +238,7 @@
         </style>
   </head>
   <body>
-      <?php include 'navbar.html'; ?>
+      <?php include ('navbar.php'); ?>
 
         <!-- MAIN CONTENT FOR EACH PAGE -->
 
@@ -237,13 +255,13 @@
                           <!-- <p>Please fill in this form to create an account.</p> -->
                           <hr>
                           <label for="name"><b>First Name</b></label>
-                          <input type="text" placeholder="First Name" name="name" required>
+                          <input type="text" placeholder="<?php echo $row['user_firstname'];?>" name="name" required>
 
                           <label for="name"><b>Last Name</b></label>
-                          <input type="text" placeholder="Last Name" name="name" required>
+                          <input type="text" placeholder="<?php echo $row['user_lastname'];?>" name="name" required>
 
                           <label for="email"><b>Email</b></label>
-                          <input type="text" placeholder="Email" name="email" required>
+                          <input type="text" placeholder="<?php echo $row['user_email'];?>" name="email" required>
                     
                           <label for="psw"><b>Password</b></label>
                           <input type="password" placeholder="Password" name="psw" required>

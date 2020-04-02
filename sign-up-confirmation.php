@@ -1,8 +1,21 @@
 <?php
 
-  session_start();
+    require 'config/config.php';
 
-  require "config/config.php";
+    if ( !isset($_POST['user_email']) || empty($_POST['user_email'])
+        || !isset($_POST['user_firstname']) || empty($_POST['user_firstname'])
+        || !isset($_POST['user_lastname']) || empty($_POST['user_lastname'])
+        || !isset($_POST['user_password']) || empty($_POST['user_password'])
+        || !isset($_POST['confirm_password']) || empty($_POST['confirm_password']))
+        {
+        $error = "Please fill out all required fields.";
+        } 
+      else if ($_POST['confirm_password'] != $_POST['confirm_password']){
+        $error = "passwords dont match";
+      }
+
+else {
+  // All fields provided.
 
   $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
@@ -11,64 +24,48 @@
     exit();
   }
 
-  $mysqli->set_charset('utf8');
+  $user_email = $mysqli->escape_string( $_POST['user_email'] );
+  $user_firstname = $mysqli->escape_string( $_POST['user_firstname'] );
+  $user_lastname = $mysqli->escape_string( $_POST['user_lastname'] );
+  $user_password = $mysqli->escape_string( $_POST['user_password'] );
 
+  $sql_user = "SELECT *
+              FROM users
+              WHERE user_email = '$user_email';";
 
-//******************* KR's CODE **********************//
-  // If not logged in
-if ( !isset( $_SESSION['login'] ) || empty( $_SESSION['login'] ) ) {
+  $results_user = $mysqli->query($sql_user);
 
-    // If user tried logging in, check if everything is filled
-    if ( !isset( $_POST['username'] ) || empty($_POST['username']) || !isset( $_POST['password'] ) || empty($_POST['password']) ) {
-            $error = "Please fill out username and password.";
-    }
-    else {
-        // If user filled in everything
-        $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        if ( $mysqli->connect_errno ) {
-            echo $mysqli->connect_error;
-            exit();
-        }
-        $mysqli->set_charset('utf8');
-
-        // Check if username already exists
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-
-        $sql_check = "SELECT * FROM users WHERE user_email='$email' AND user_password='$password';";
-        $results_check = $mysqli->query($sql_check);
-        if ( !$results_check ) {
-            echo $mysqli->error;
-            $mysqli->close();
-            exit();
-        }
-        $results_check_num = $results_check->num_rows;
-        
-        // When email exists
-        if ($results_check_num == 1) {
-            $_SESSION['login'] = true;
-            $_SESSION['email'] = $_POST['email'];
-            $_SESSION['password'] = $_POST['password'];
-            header('Location: search.php');
-        }
-        // When email doesn't exist
-        else {
-             $error = "Incorrect email or password.";
-        }
-
-    } 
-
-}
-// If logged in --> Search page
-else {
-    header('Location: search.php');
+  if (!$results_user) {
+    echo $mysqli->error;
     $mysqli->close();
+    exit();
+  }
+
+  // if we founds some rows, means username is taken.
+  if ( $results_user->num_rows > 0 ) {
+    $error = "Email is already registered.";
+  } else {
+    // Username & email are available.
+    $sql = "INSERT INTO users (user_email, user_firstname, user_lastname, user_password)
+    VALUES ('$user_email', '$user_firstname', '$user_lastname', '$user_password');";
+
+    $results = $mysqli->query($sql);
+
+    if (!$results) {
+      echo $mysqli->error();
+      $mysqli->close();
+      exit();
+    }
+  }
+
+  $mysqli->close();
 }
 
+   
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -213,98 +210,46 @@ else {
         } */
     </style>
   </head>
-  <body>
-      <div id="nav-container" class="container mb-5">
+
+<body>  
+
+<div id="nav-container" class="container mb-5">
         <div id="logo-container">
-          <img id="logo-img" class="img-fluid" src="assets/img/homepage/logo.png" alt="logo">
+         <a href="index.php"> <img id="logo-img" class="img-fluid" src="assets/img/homepage/logo.png" alt="logo"></a>
         </div>
 
         <div id="login-container">
-          <a href="sign-up.php"><button type="button" class="btn btn-outline-success" onclick="document.getElementById('id01').style.display='block'">Sign up</button></a>
+          <button type="button" class="btn btn-outline-success" onclick="document.getElementById('id01').style.display='block'">Sign up</button>
           <a href="login.php"><button type="button" class="btn btn-success" onclick="document.getElementById('id02').style.display='block'">Log in</button></a>
         </div>
-      </div>
-
-      <div id="header" class="img-fluid container-fluid mt-5">
-        <div id="header-left">
-          <h1 class="$font-size-base mb-3">Keep track of your fridge to save money & eliminate food waste</h1>
-
-          <a class="btn btn-success" href="index.php#saving" role="button" onclick="document.getElementById('id02').style.display='block'">START SAVING</a>
-          
-        </div>
-
-        <div id="header-right">
-          <img id="food" class="img-fluid" src="assets/img/homepage/food.png" alt="food">
-        </div>
-
-      </div>
-
-    <div class="clearfloat"></div>
-
+</div>
+<div id="id01">
+  <!-- <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal"></span> -->
+  
     <div class="container">
-      <h3 id="saving" class="mt-5">How to get started?</h3>
-      <div class="row mt-5">
 
-        <div class="col">
-          <div class="icon-container">
-            <img class="icons" src="assets/img/homepage/harvest.png" alt="ingredients">
-          </div>
-          <div class="captions">Select Ingredients</div>
-        </div>
+       <h1>Sign Up Confimation</h1>
 
-        <div class="col">
-          <div class="icon-container">
-            <img class="icons" src="assets/img/homepage/shopping-list.png" alt="list">
-          </div>
-          <div class="captions">Add to Fridge List</div>
-        </div>
+    <div class="row mt-4">
+      <div class="col-12">
+        <?php if ( isset($error) && !empty($error) ) : ?>
+          <div class="text-danger"><?php echo $error; ?></div>
+        <?php else : ?>
+          <div class="text-success"><?php echo $user_firstname; ?> was successfully registered.</div>
+        <?php endif; ?>
+    </div> <!-- .col -->
+  </div> <!-- .row -->
 
-        <div class="col">
-          <div class="icon-container">
-            <img class="icons" src="assets/img/homepage/bell.png" alt="bell">
-          </div>
-          <div class="captions">Receive Reminders</div>
-        </div>
+  <div class="row mt-4 mb-4">
+    <div class="col-12">
+      <a href="login.php" role="button" class="btn btn-primary">Login</a>
+      <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>" role="button" class="btn btn-light">Back</a>
+    </div> <!-- .col -->
+  </div> <!-- .row -->
 
-      </div>
-    </div>
+</div> <!-- .container -->
 
-    <div class="container mt-5">
-      <div class="row">
-        <div class="col body-pic">
-          <img src="assets/img/homepage/list.png" alt="list">
-        </div>
-        <div class="col">
-          <h4>My Fridge</h4>
-          <p>A clear display of ingredient name, quantity, expiration date and a calendar specified with expiring food on each day</p>
-        </div>
-        <div class="w-100"></div>
-        <div class="col">
-          <h4>Recipes</h4>
-          <p>We curate recipe that are both delicious and easy-to-cook for your inspiration!</p>
-        </div>
-        <div class="col body-pic">
-          <img src="assets/img/homepage/recipe.png" alt="recipe">
-        </div>
-        <div class="w-100"></div>
-        <div class="col body-pic">
-          <img src="assets/img/homepage/report.png" alt="report">
-        </div>
-        <div class="col">
-          <h4>Reports</h4>
-          <p>Food wastings, saving, goals...our reports feature helps you understanding your consuming habit and planning future saving</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="container-fluid" id="footer">
-      2020 &copy; University of Southern California
-    </div>
-
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+ <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
@@ -329,5 +274,5 @@ else {
           }
       }  -->
     </script>
-  </body>
+</body>
 </html>

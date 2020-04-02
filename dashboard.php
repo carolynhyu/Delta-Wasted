@@ -11,6 +11,24 @@
 
   $mysqli->set_charset('utf8');
 
+
+  $email = $_SESSION['user_email'];
+  $password = $_SESSION['user_password'];
+
+  $sql_user = "SELECT * FROM users WHERE user_email='$email' AND user_password='$password';";
+        $results_user = $mysqli->query($sql_user);
+        if ( !$results_user ) {
+            echo $mysqli->error;
+            $mysqli->close();
+            exit();
+        }
+
+  $row = $results_user->fetch_assoc();
+
+  $user_id = $row['user_id'];
+
+  $mysqli->close();
+
 ?>
 
 <!DOCTYPE html>
@@ -92,7 +110,7 @@
     <title></title>
   </head>
   <body>
-    <?php include 'navbar.html'; ?>
+    <?php include ('navbar.php'); ?>
 
         <!-- MAIN CONTENT FOR EACH PAGE -->
 
