@@ -108,6 +108,7 @@ input.form-control::placeholder {
   height: 50px;
   width: 50px;
   transition: background 0.2s ease-in-out;
+  display: none;
 }
 
 .ingredient-check .fa {
