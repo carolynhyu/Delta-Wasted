@@ -160,7 +160,7 @@
               <?php
                     while($row = mysqli_fetch_assoc($results_items))
                     {
-                       echo '<div class="col-md-3 ingredient-outer"><a data-fancybox data-src="#ingredient-modal"><div class="ingredient-inner"><div class="ingredient-check"><span class="fa fa-check fa-fw ml-3"></span></div><div class="ingredient-image"><img src="' . $row['img_url'] . '" /></div><h4>' . $row['fridgelist_name'] . '</h4></div></a></div>';
+                       echo '<div class="col-md-3 ingredient-outer"><a data-fancybox data-src="#ingredient-modal"><div class="ingredient-inner" item-id="' . $row['fridgelist_id'] . '"><div class="ingredient-check"><span class="fa fa-check fa-fw ml-3"></span></div><div class="ingredient-image"><img src="' . $row['img_url'] . '" /></div><h4>' . $row['fridgelist_name'] . '</h4></div></a></div>';
                     }
               ?>
               </div>
@@ -352,6 +352,26 @@
       crossorigin="anonymous"
     ></script>
     <script src="assets/js/core.js"></script>
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+          $('.ingredient-inner').click(function() {
+            var item_id = $(this).attr('item-id');
+            console.log(item_id)
+
+            $.ajax({
+              url:"item.php",
+              method: "post",
+              data:{item_id:item_id},
+              success: function(data) {
+                console.log(data)
+                $('#ingredient-modal').html(data)
+              }
+
+            });
+          })
+      });
+    </script>
 
 
   </body>
