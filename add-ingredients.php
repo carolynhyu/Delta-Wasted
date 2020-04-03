@@ -163,43 +163,6 @@
                        echo '<div class="col-md-3 ingredient-outer"><a data-fancybox data-src="#ingredient-modal"><div class="ingredient-inner"><div class="ingredient-check"><span class="fa fa-check fa-fw ml-3"></span></div><div class="ingredient-image"><img src="' . $row['img_url'] . '" /></div><h4>' . $row['fridgelist_name'] . '</h4></div></a></div>';
                     }
               ?>
-                <div class="col-md-3 ingredient-outer">
-                  <a data-fancybox data-src="#ingredient-modal">
-                    <div class="ingredient-inner">
-                      <div class="ingredient-check">
-                        <span class="fa fa-check fa-fw ml-3"></span>
-                      </div>
-                      <div class="ingredient-image">
-                        <img src="assets/img/ingredients/olives.png" />
-                      </div>
-                      <h4>Black Olives</h4>
-                    </div>
-                  </a>
-                </div>
-                <div class="col-md-3 ingredient-outer">
-                  <div class="ingredient-inner">
-                    <div class="ingredient-check">
-                      <span class="fa fa-check fa-fw ml-3"></span>
-                    </div>
-                    <div class="ingredient-image">
-                      <img src="assets/img/ingredients/apple.png" />
-                    </div>
-                    <h4>Apples</h4>
-                  </div>
-                </div>
-                <div class="col-md-3 ingredient-outer">
-                  <div class="ingredient-inner">
-                    <div class="ingredient-check">
-                      <span class="fa fa-check fa-fw ml-3"></span>
-                    </div>
-                    <div class="ingredient-image">
-                      <img src="assets/img/ingredients/meat.png" />
-                    </div>
-                    <h4>Steak</h4>
-
-                    
-                  </div>
-                </div>
               </div>
             </div>
           </div>
