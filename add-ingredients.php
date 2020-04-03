@@ -26,7 +26,7 @@
   </head>
   <body>
       <?php include 'navbar.html'; ?>
-      <!-- test -->
+      <!-- test! -->
 
         <!-- MAIN CONTENT FOR EACH PAGE -->
 
