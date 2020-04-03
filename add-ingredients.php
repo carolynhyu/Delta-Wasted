@@ -1,17 +1,40 @@
+<?php
+
+  require "config/config.php";
+
+  $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+  if ( $mysqli->connect_errno ) {
+    echo $mysqli->connect_error;
+    exit();
+  }
+
+  $mysqli->set_charset('utf8');
+
+
+  $email = $_SESSION['user_email'];
+  $password = $_SESSION['user_password'];
+
+  $sql_user = "SELECT * FROM users WHERE user_email='$email' AND user_password='$password';";
+        $results_user = $mysqli->query($sql_user);
+        if ( !$results_user ) {
+            echo $mysqli->error;
+            $mysqli->close();
+            exit();
+        }
+
+  $row = $results_user->fetch_assoc();
+
+  $user_id = $row['user_id'];
+
+  $mysqli->close();
+
+?>
+
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="assets/css/bootstrap_nav.css" />
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-      crossorigin="anonymous"
-    />
-    <script
-      src="https://kit.fontawesome.com/cddc03767c.js"
-      crossorigin="anonymous"
-    ></script>
+      <link rel="stylesheet" href="assets/css/main.css" />
 
     <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
     <link
@@ -20,13 +43,19 @@
     />
     <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
 
-    <link rel="stylesheet" href="assets/css/main.css" />
+  <style>
 
+  </style>
     <title></title>
   </head>
   <body>
+<<<<<<< HEAD
       <?php include 'navbar.html'; ?>
       <!-- test! -->
+=======
+
+      <?php include ('navbar.php'); ?>
+>>>>>>> d85fb26c0f7461aaddbaccf79ca3270cb6483184
 
         <!-- MAIN CONTENT FOR EACH PAGE -->
 
@@ -161,8 +190,8 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
+
+
 
     <div style="display:none">
       <div id="ingredient-modal">
@@ -346,5 +375,7 @@
       crossorigin="anonymous"
     ></script>
     <script src="assets/js/core.js"></script>
+
+
   </body>
 </html>

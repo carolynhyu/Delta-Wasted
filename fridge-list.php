@@ -1,3 +1,36 @@
+<?php
+
+  require "config/config.php";
+
+  $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+  if ( $mysqli->connect_errno ) {
+    echo $mysqli->connect_error;
+    exit();
+  }
+
+  $mysqli->set_charset('utf8');
+
+
+  $email = $_SESSION['user_email'];
+  $password = $_SESSION['user_password'];
+
+  $sql_user = "SELECT * FROM users WHERE user_email='$email' AND user_password='$password';";
+        $results_user = $mysqli->query($sql_user);
+        if ( !$results_user ) {
+            echo $mysqli->error;
+            $mysqli->close();
+            exit();
+        }
+
+  $row = $results_user->fetch_assoc();
+
+  $user_id = $row['user_id'];
+
+  $mysqli->close();
+
+?>
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -137,7 +170,7 @@
     <title>Wasted | Fridge List</title>
   </head>
   <body>
-    <?php include 'navbar.html'; ?>
+    <?php include 'navbar.php'; ?>
         <!-- MAIN CONTENT FOR EACH PAGE -->
 
         <div class="col-md-10 offset-md-2 hidePadding">
@@ -145,7 +178,7 @@
             <div class="container-fluid main-content-header">
               <div class="row">
                 <div class="col-md-12">
-                  <h4>Sara's Fridge List</h4>
+                  <h4><?php echo $row['user_firstname'];?>'s Fridge List</h4>
                 </div> 
               </div>
             </div>
