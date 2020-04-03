@@ -27,6 +27,17 @@
 
   $user_id = $row['user_id'];
 
+  $sql_items = "SELECT * FROM fridgelists";
+
+  $results_items = $mysqli->query($sql_items);
+        if ( !$results_items ) {
+            echo $mysqli->error;
+            $mysqli->close();
+            exit();
+        }
+
+        $row_items = mysqli_fetch_array($results_items);
+
   $mysqli->close();
 
 ?>
@@ -49,13 +60,8 @@
     <title></title>
   </head>
   <body>
-<<<<<<< HEAD
-      <?php include 'navbar.html'; ?>
-      <!-- test! -->
-=======
 
       <?php include ('navbar.php'); ?>
->>>>>>> d85fb26c0f7461aaddbaccf79ca3270cb6483184
 
         <!-- MAIN CONTENT FOR EACH PAGE -->
 
@@ -151,6 +157,12 @@
             </div>
             <div class="container-fluid add-ingredient-boxes">
               <div class="row">
+              <?php
+                    while($row = mysqli_fetch_assoc($results_items))
+                    {
+                       echo '<div class="col-md-3 ingredient-outer"><a data-fancybox data-src="#ingredient-modal"><div class="ingredient-inner"><div class="ingredient-check"><span class="fa fa-check fa-fw ml-3"></span></div><div class="ingredient-image"><img src="' . $row['img_url'] . '" /></div><h4>' . $row['fridgelist_name'] . '</h4></div></a></div>';
+                    }
+              ?>
                 <div class="col-md-3 ingredient-outer">
                   <a data-fancybox data-src="#ingredient-modal">
                     <div class="ingredient-inner">
@@ -181,9 +193,11 @@
                       <span class="fa fa-check fa-fw ml-3"></span>
                     </div>
                     <div class="ingredient-image">
-                      <img src="assets/img/ingredients/meat-steak.png" />
+                      <img src="assets/img/ingredients/meat.png" />
                     </div>
                     <h4>Steak</h4>
+
+                    
                   </div>
                 </div>
               </div>
@@ -254,7 +268,7 @@
     <div style="display:none">
       <div id="custom-ingredient-modal">
         <div class="ingredient-image custom-image">
-          <img src="assets/img/ingredients/fruit.png" />
+          <img src="assets/img/ingredients/fruit-general.png" />
         </div>
         <h4>Add a custom ingredient</h4>
         <div class="input-group">
