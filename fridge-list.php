@@ -1,4 +1,5 @@
 <?php
+  // establish database connection
 
   require "config/config.php";
 
@@ -11,22 +12,25 @@
 
   $mysqli->set_charset('utf8');
 
-
+  // pull user session information 
   $email = $_SESSION['user_email'];
   $password = $_SESSION['user_password'];
 
   $sql_user = "SELECT * FROM users WHERE user_email='$email' AND user_password='$password';";
-        $results_user = $mysqli->query($sql_user);
-        if ( !$results_user ) {
-            echo $mysqli->error;
-            $mysqli->close();
-            exit();
-        }
+  $results_user = $mysqli->query($sql_user);
+    if ( !$results_user ) {
+        echo $mysqli->error;
+        $mysqli->close();
+        exit();
+    }
 
   $row = $results_user->fetch_assoc();
 
   $user_id = $row['user_id'];
 
+  
+
+  // close sql connection
   $mysqli->close();
 
 ?>
@@ -39,48 +43,41 @@
     <script src='assets/js/fullcalendar-4.4.0/packages/core/main.js'></script>
     <script src='assets/js/fullcalendar-4.4.0/packages/interaction/main.js'></script>
     <script src='assets/js/fullcalendar-4.4.0/packages/daygrid/main.js'></script>
+
+     <!-- <script src="http://code.jquery.com/jquery.min.js" type="text/javascript"></script> -->
+
     <script>
+    // var json_obj = JSON.parse( ' + <?php// echo $events; ?> + ' );
+    // console.log(json_obj);
+
+    // var jsonObj = JSON.parse('<?php // echo $events; ?>');
+    // console.log(jsonObj);
+    
+    // var eventList = <?php // echo json_encode($events, JSON_PRETTY_PRINT) ?>;
+    // console.log(json_obj);
 
       document.addEventListener('DOMContentLoaded', function() {
         var CalendarEl = document.getElementById('calendar');
-        // var CalendarEl = document.getElementById('calendar');
+        
+        //var events = <?php // echo json_encode($events); ?>;
 
         var Calendar = new FullCalendar.Calendar(CalendarEl, {
           plugins: [ 'interaction', 'dayGrid' ],
           editable: true,
-          defaultDate: '2020-02-12',
-          events: [
-          {
-            title: 'event1',
-            start: '2020-02-11T10:00:00',
-            end: '2020-02-11T16:00:00'
-          },
-          {
-            title: 'event2',
-            start: '2020-02-13T10:00:00',
-            end: '2020-02-13T16:00:00'
-          }
-          ],
+
           eventLeave: function(info) {
             console.log('event left!', info.event);
-          }
+          },
+
+          events: window.location.origin + '/Delta-Wasted-develop/fridge-list-data.php'
+
         });
 
-        var Calendar = new FullCalendar.Calendar(CalendarEl, {
-          plugins: [ 'interaction', 'dayGrid' ],
-          defaultDate: '2020-02-12',
-          editable: true,
-      droppable: true, // will let it receive events!
-      eventReceive: function(info) {
-        console.log('event received!', info.event);
-      }
-    });
-
-        // srcCalendar.render();
         Calendar.render();
       });
 
     </script>
+
 
     <!--calendar-->
     <link rel="stylesheet" href="assets/css/stylesheet.css" />
@@ -400,7 +397,7 @@
 
                 <!--calendar-->
 
-                  <div class="col-md-6" id='calendar'></div>
+                  <div class="col-md-6" id='calendar' data-toggle="tooltip"></div>
 
             </div>
 
@@ -420,5 +417,6 @@
       crossorigin="anonymous"
     ></script>
     <script src="assets/js/core.js"></script>
+
   </body>
 </html>
