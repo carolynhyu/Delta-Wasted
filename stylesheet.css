@@ -1,0 +1,79 @@
+#expiringfood{
+	padding-top:20px;
+}
+
+#expiringfood li{
+	margin-bottom: 1%;
+	border-radius: 3%;
+}
+
+.food_pic{
+	height:50px;
+	margin: 10px 20px 10px 20px;
+
+}
+
+table{
+	/*vertical-align: middle;*/
+
+}
+
+tbody{
+	background-color: white;
+	/*vertical-align: middle;*/
+}
+
+.food-name{
+	font-size: .9em;
+	text-align: left;
+}
+
+.food-count{
+	font-size: .7em;
+	color:gray;
+	text-align: left;
+}
+
+.date{
+	padding-top: 60px;
+}
+
+.delete{
+	width:50px;
+}
+
+.exp-date{
+	color: black;
+	font-size: .8em;
+	float: left;
+	text-align: center;
+}
+
+.clock_pic{
+	height: 15px;
+	padding-right: 5px;
+	padding-top: 3px;
+	float: left;
+}
+
+.green-clock{
+	color: #A0D468;
+}
+
+.red-clock{
+	color: #FF6666;
+}
+
+.yellow-clock{
+	color: #FFAF66;
+}
+
+td btn-sm{
+	align: center;
+}
+
+.edit{
+	align-content: right;
+}
+
+

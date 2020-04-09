@@ -50,9 +50,12 @@ button.btn-primary {
   background-color: #a0d468;
 }
 
-.filter-section,
-.add-ingredient-boxes {
+.filter-section {
   margin-top: 30px;
+}
+
+.add-ingredient-boxes {
+  margin-top: 0px;
 }
 
 input {
@@ -105,6 +108,7 @@ input.form-control::placeholder {
   height: 50px;
   width: 50px;
   transition: background 0.2s ease-in-out;
+  display: none;
 }
 
 .ingredient-check .fa {
@@ -155,6 +159,10 @@ input.form-control::placeholder {
   color: #bbb;
   font-size: 12px;
   text-align: center;
+}
+
+.ingredient-outer {
+  margin-top: 30px;
 }
 
 .qty .count {

@@ -154,6 +154,6 @@ li.nav-item img {
 }
 
 .sidebar-outer {
-  position: absolute !important;
+  position: fixed !important;
   z-index: 99;
 }

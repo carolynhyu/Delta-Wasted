@@ -1,4 +1,73 @@
-<!doctype html>
+<?php
+
+  session_start();
+
+  require "config/config.php";
+
+  $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+  if ( $mysqli->connect_errno ) {
+    echo $mysqli->connect_error;
+    exit();
+  }
+
+  $mysqli->set_charset('utf8');
+
+
+//******************* KR's CODE **********************//
+  // If not logged in
+if ( !isset( $_SESSION['login'] ) || empty( $_SESSION['login'] ) ) {
+
+    // If user tried logging in, check if everything is filled
+    if ( !isset( $_POST['username'] ) || empty($_POST['username']) || !isset( $_POST['password'] ) || empty($_POST['password']) ) {
+            $error = "Please fill out username and password.";
+    }
+    else {
+        // If user filled in everything
+        $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+        if ( $mysqli->connect_errno ) {
+            echo $mysqli->connect_error;
+            exit();
+        }
+        $mysqli->set_charset('utf8');
+
+        // Check if username already exists
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+
+        $sql_check = "SELECT * FROM users WHERE user_email='$email' AND user_password='$password';";
+        $results_check = $mysqli->query($sql_check);
+        if ( !$results_check ) {
+            echo $mysqli->error;
+            $mysqli->close();
+            exit();
+        }
+        $results_check_num = $results_check->num_rows;
+        
+        // When email exists
+        if ($results_check_num == 1) {
+            $_SESSION['login'] = true;
+            $_SESSION['email'] = $_POST['email'];
+            $_SESSION['password'] = $_POST['password'];
+            header('Location: search.php');
+        }
+        // When email doesn't exist
+        else {
+             $error = "Incorrect email or password.";
+        }
+
+    } 
+
+}
+// If logged in --> Search page
+else {
+    header('Location: search.php');
+    $mysqli->close();
+}
+
+?>
+
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
@@ -151,8 +220,8 @@
         </div>
 
         <div id="login-container">
-          <button type="button" class="btn btn-outline-success" onclick="document.getElementById('id01').style.display='block'">Sign up</button>
-          <button type="button" class="btn btn-success" onclick="document.getElementById('id02').style.display='block'">Log in</button>
+          <a href="sign-up.php"><button type="button" class="btn btn-outline-success" onclick="document.getElementById('id01').style.display='block'">Sign up</button></a>
+          <a href="login.php"><button type="button" class="btn btn-success" onclick="document.getElementById('id02').style.display='block'">Log in</button></a>
         </div>
       </div>
 
@@ -160,7 +229,7 @@
         <div id="header-left">
           <h1 class="$font-size-base mb-3">Keep track of your fridge to save money & eliminate food waste</h1>
 
-          <a class="btn btn-success" href="dashboard.php" role="button">START SAVING</a>
+          <a class="btn btn-success" href="index.php#saving" role="button" onclick="document.getElementById('id02').style.display='block'">START SAVING</a>
           
         </div>
 
@@ -173,7 +242,7 @@
     <div class="clearfloat"></div>
 
     <div class="container">
-      <h3 class="mt-5">How to get started?</h3>
+      <h3 id="saving" class="mt-5">How to get started?</h3>
       <div class="row mt-5">
 
         <div class="col">
@@ -229,73 +298,9 @@
     </div>
 
     <div class="container-fluid" id="footer">
-      2020 @ University of Southern California
+      2020 &copy; University of Southern California
     </div>
 
-<!-- The Modal (contains the Sign Up form) -->
-<div id="id01" class="modal">
-  <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal"></span>
-  <form class="modal-content" action="/action_page.php">
-    <div class="container">
-      <h1>Sign Up</h1>
-      <p>Please fill in this form to create an account.</p>
-      <hr>
-      <label for="name"><b>First Name</b></label>
-      <input type="text" placeholder="Enter First Name" name="name" required>
-
-      <label for="name"><b>Last Name</b></label>
-      <input type="text" placeholder="Enter Last Name" name="name" required>
-
-      <label for="email"><b>Email</b></label>
-      <input type="text" placeholder="Enter Email" name="email" required>
-
-      <label for="psw"><b>Password</b></label>
-      <input type="password" placeholder="Enter Password" name="psw" required>
-
-      <label for="psw-repeat"><b>Repeat Password</b></label>
-      <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
-
-      <label>
-        <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
-      </label>
-
-      <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
-
-      <div class="clearfix">
-        <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
-        <button type="submit" class="signup">Sign Up</button>
-      </div>
-    </div>
-  </form>
-</div>
-
-<!-- The Modal (contains the Log In form) -->
-<div id="id02" class="modal">
-  <span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close Modal"></span>
-  <form class="modal-content" action="/action_page.php">
-    <div class="container">
-      <h1>Log In</h1>
-      <!-- <p>Please fill in this form to create an account.</p> -->
-      <hr>
-
-      <label for="email"><b>Email</b></label>
-      <input type="text" placeholder="Enter Email" name="email" required>
-
-      <label for="psw"><b>Password</b></label>
-      <input type="password" placeholder="Enter Password" name="psw" required>
-
-      <label>
-        <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
-      </label>
-
-
-      <div class="clearfix">
-        <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
-        <button type="submit" class="signup">Log In</button>
-      </div>
-    </div>
-  </form>
-</div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -304,29 +309,25 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
 <!-- Sign up modal -->
-    <script>
-      // Get the modal
+    <!-- <script>
       var modal = document.getElementById('id01');
       
-      // When the user clicks anywhere outside of the modal, close it
       window.onclick = function(event) {
           if (event.target == modal) {
               modal.style.display = "none";
           }
       }
-      </script>
+      </script> -->
 
 <!-- Log in modal -->
-    <script>
-      // Get the modal
+    <!-- <script>
       var modal2 = document.getElementById('id02');
       
-      // When the user clicks anywhere outside of the modal, close it
       window.onclick = function(event) {
           if (event.target == modal2) {
               modal2.style.display = "none";
           }
-      }
+      }  -->
     </script>
   </body>
 </html>

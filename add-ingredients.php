@@ -1,17 +1,60 @@
+<?php
+
+  require "config/config.php";
+
+  $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+  if ( $mysqli->connect_errno ) {
+    echo $mysqli->connect_error;
+    exit();
+  }
+
+  $mysqli->set_charset('utf8');
+
+
+  $email = $_SESSION['user_email'];
+  $password = $_SESSION['user_password'];
+
+  $sql_user = "SELECT * FROM users WHERE user_email='$email' AND user_password='$password';";
+        $results_user = $mysqli->query($sql_user);
+        if ( !$results_user ) {
+            echo $mysqli->error;
+            $mysqli->close();
+            exit();
+        }
+
+  $row = $results_user->fetch_assoc();
+
+  $user_id = $row['user_id'];
+ $sql_items = "SELECT * FROM fridgelists";
+
+  $results_items = $mysqli->query($sql_items);
+        if ( !$results_items ) {
+            echo $mysqli->error;
+            $mysqli->close();
+            exit();
+        }
+
+        $row_items = mysqli_fetch_array($results_items);
+
+
+        $sql_categories = "SELECT * FROM categories";
+
+  $results_categories = $mysqli->query($sql_categories);
+        if ( !$results_categories ) {
+            echo $mysqli->error;
+            $mysqli->close();
+            exit();
+        }
+
+  $mysqli->close();
+
+?>
+
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="assets/css/bootstrap_nav.css" />
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-      crossorigin="anonymous"
-    />
-    <script
-      src="https://kit.fontawesome.com/cddc03767c.js"
-      crossorigin="anonymous"
-    ></script>
+      <link rel="stylesheet" href="assets/css/main.css" />
 
     <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
     <link
@@ -20,12 +63,14 @@
     />
     <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
 
-    <link rel="stylesheet" href="assets/css/main.css" />
+  <style>
 
+  </style>
     <title></title>
   </head>
   <body>
-      <?php include 'navbar.html'; ?>
+
+      <?php include ('navbar.php'); ?>
 
         <!-- MAIN CONTENT FOR EACH PAGE -->
 
@@ -38,20 +83,12 @@
                   <a data-fancybox data-src="#custom-ingredient-modal">
                     <button
                       type="button"
-                      class="btn btn-primary button-after-header"
+                      class="btn btn-primary button-after-header right-float-button"
                     >
                       <span class="fa fa-plus-circle fa-fw mr-3"></span>Can't
                       find your ingredient?
                     </button>
                   </a>
-                  <button
-                    type="button"
-                    class="btn btn-primary right-float-button disabled"
-                  >
-                    Add selected ingredients<span
-                      class="fa fa-arrow-right fa-fw ml-3"
-                    ></span>
-                  </button>
                 </div>
               </div>
             </div>
@@ -82,17 +119,15 @@
                       Filter by food category
                     </button>
                     <div
-                      class="dropdown-menu"
+                      class="dropdown-menu categories"
                       aria-labelledby="dropdownMenuButton"
                     >
-                      <a class="dropdown-item" href="#">Vegetables</a>
-                      <a class="dropdown-item" href="#">Fruits</a>
-                      <a class="dropdown-item" href="#">Grains</a>
-                      <a class="dropdown-item" href="#">Beans & Nuts</a>
-                      <a class="dropdown-item" href="#">Fish & Seafood</a>
-                      <a class="dropdown-item" href="#">Meat & Poultry</a>
-                      <a class="dropdown-item" href="#">Dairy</a>
-                      <a class="dropdown-item" href="#">Other</a>
+                    <a class="dropdown-item reset" href="#">All items</a>
+                    <?php
+                    while($row = mysqli_fetch_assoc($results_categories))
+                    {
+                      echo '<a class="dropdown-item" href="#" category-id=' . $row['category_id'] . '>' . $row['category'] . '</a>';
+                    } ?>
                     </div>
                   </div>
                   <div class="dropdown">
@@ -112,7 +147,7 @@
                     >
                       <a class="dropdown-item" href="#">Most added by you</a>
                       <a class="dropdown-item" href="#">Alphabetical</a>
-                      <a class="dropdown-item" href="#">Expires quickets</a>
+                      <a class="dropdown-item" href="#">Expires quickest</a>
                       <a class="dropdown-item" href="#">Expires slowest</a>
                     </div>
                   </div>
@@ -121,50 +156,31 @@
             </div>
             <div class="container-fluid add-ingredient-boxes">
               <div class="row">
-                <div class="col-md-3 ingredient-outer">
-                  <a data-fancybox data-src="#ingredient-modal">
-                    <div class="ingredient-inner">
-                      <div class="ingredient-check">
-                        <span class="fa fa-check fa-fw ml-3"></span>
-                      </div>
-                      <div class="ingredient-image">
-                        <img src="assets/img/ingredients/olives.png" />
-                      </div>
-                      <h4>Black Olives</h4>
-                    </div>
-                  </a>
-                </div>
-                <div class="col-md-3 ingredient-outer">
-                  <div class="ingredient-inner">
-                    <div class="ingredient-check">
-                      <span class="fa fa-check fa-fw ml-3"></span>
-                    </div>
-                    <div class="ingredient-image">
-                      <img src="assets/img/ingredients/apple.png" />
-                    </div>
-                    <h4>Apples</h4>
-                  </div>
-                </div>
-                <div class="col-md-3 ingredient-outer">
-                  <div class="ingredient-inner">
-                    <div class="ingredient-check">
-                      <span class="fa fa-check fa-fw ml-3"></span>
-                    </div>
-                    <div class="ingredient-image">
-                      <img src="assets/img/ingredients/meat-steak.png" />
-                    </div>
-                    <h4>Steak</h4>
-                  </div>
-                </div>
+              <?php
+              $food_names = array();
+              $food_ids = array();
+                    while($row = mysqli_fetch_assoc($results_items))
+                    {
+                      if (!in_array($row['fridgelist_name'], $food_names)) {
+                        array_push($food_names, $row['fridgelist_name']);
+                      array_push($food_ids, $row['fridgelist_id']);
+                      }
+                      if (in_array($row['fridgelist_id'], $food_ids)) {
+                        echo '<div class="col-md-3 ingredient-outer"><a data-fancybox class="ope" data-src="#ingredient-modal"><div class="ingredient-inner" item-id="' . $row['fridgelist_id'] . '"><div class="ingredient-check"><span class="fa fa-check fa-fw ml-3"></span></div><div class="ingredient-image"><img src="' . $row['img_url'] . '" /></div><h4>' . $row['fridgelist_name'] . '</h4></div></a></div>';
+                          }
+                      
+                    }
+
+              ?>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+
+
 
     <div style="display:none">
-      <div id="ingredient-modal">
+      <div id="ingredient-modal" class="existing-modal" data-id=>
         <div class="ingredient-image">
           <img src="assets/img/ingredients/olives.png" />
         </div>
@@ -224,7 +240,7 @@
     <div style="display:none">
       <div id="custom-ingredient-modal">
         <div class="ingredient-image custom-image">
-          <img src="assets/img/ingredients/fruit.png" />
+          <img src="assets/img/ingredients/fruit-general.png" />
         </div>
         <h4>Add a custom ingredient</h4>
         <div class="input-group">
@@ -345,5 +361,100 @@
       crossorigin="anonymous"
     ></script>
     <script src="assets/js/core.js"></script>
+
+    <script type="text/javascript">
+$('.ingredient-inner').click(function() {
+  console.log('te')
+  var item_id = $(this).attr('item-id');
+  $('.existing-modal').attr("data-id", item_id)
+  console.log(item_id)
+
+  $.ajax({
+    url:"item.php",
+    method: "post",
+    data:{item_id:item_id},
+    success: function(data) {
+      $('#ingredient-modal').html(data)
+    }
+
+  });
+});
+
+    var user_id = 1;
+    var item_ids = [];
+    var item_quantities = new Array();
+    var item_dates = [];
+    var item_costs = [];
+ 
+      $(document).ready(function() {
+
+        $('.ingredient-search').keyup(function() {
+          var term = $(this).val();
+          if (term != '') {
+            $.ajax({
+              url:"search.php",
+              method: "post",
+              data:{search:term},
+              success: function(data) {
+                $('.add-ingredient-boxes .row').html(data)
+              }
+
+            });
+          }
+          else {
+            $.ajax({
+              url:"search.php",
+              method: "post",
+              data:{search:term},
+              success: function(data) {
+                $('.add-ingredient-boxes .row').html(data)
+              }
+
+            });
+          }
+
+
+        });
+
+        $('.ope').fancybox(
+        {
+            href:'ajax/test.php',
+            titleShow:false
+        }); 
+
+          
+
+        $('.categories .dropdown-item').click(function() {
+          if($(this).hasClass('reset')) {
+            $.ajax({
+              url:"search.php",
+              method: "post",
+              data:{search:""},
+              success: function(data) {
+                $('.add-ingredient-boxes .row').html(data)
+              }
+
+            });
+          }
+          else {
+          var catId = $(this).attr('category-id');
+          if (catId != '') {
+            $.ajax({
+              url:"filter.php",
+              method: "post",
+              data:{category:catId},
+              success: function(data) {
+                $('.add-ingredient-boxes .row').html(data)
+              }
+
+            });
+          }
+        }
+        });
+
+      });
+    </script>
+
+
   </body>
 </html>
