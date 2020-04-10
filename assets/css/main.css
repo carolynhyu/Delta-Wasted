@@ -245,7 +245,7 @@ input:disabled {
   text-align: left !important;
 }
 
-.currency-input {
+.currency-input, .weight-input input {
   border-radius: 0px !important;
   border-bottom: 1px solid #ddd !important;
 }
@@ -278,4 +278,22 @@ input:disabled {
 .ingredient-image.custom-image {
   opacity: 0.25;
   filter: saturate(0);
+}
+
+#custom-ingredient-modal .weight-input {
+  margin-top: 0px;
+}
+
+#custom-ingredient-modal #dropdownMenuButton, input[type="date"], .existing-modal #dropdownMenuButton  {
+  border-bottom: 1px solid #ddd;
+  border-radius: 0px;
+}
+
+#custom-ingredient-modal h4, .existing-modal h4 {
+  margin-bottom: 30px;
+  text-align: center !important;
+}
+
+#custom-ingredient-modal h6, .existing-modal h6 {
+  margin-top: 20px;
 }

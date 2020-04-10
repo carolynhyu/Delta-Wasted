@@ -58,38 +58,47 @@ if(isset($_POST["item_id"])){
         </div>
         <h4>' . $row['fridgelist_name'] . '</h4>
         <form>
-    <div class="dropdown">
-        <button
-          class="btn btn-secondary dropdown-toggle official-temp"
-          type="button"
-          id="dropdownMenuButton"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-          Select storage type
-        </button>
-        <div
-          class="dropdown-menu"
-          aria-labelledby="dropdownMenuButton"
-        >';
-
-        while($row_variants = mysqli_fetch_array($results_variants))
-        {
-            $temp_adjust = $row_variants['temp_id'] - 1;
-            $output .= '<a class="dropdown-item" temp-id=' . $row_variants['temp_id'] . ' item-id=' . $row_variants['fridgelist_id'] . '>' . $temp_ref[$temp_adjust] . '</a>';
-        }
-
-
-          
-        $output .= '
+        <div class="inline-edit">
+          <div class="left-edit">
+            <h6>Storage Type</h6>
+          </div>
+          <div class="right-edit">
+          <div class="dropdown">
+          <button
+            class="btn btn-secondary dropdown-toggle official-temp"
+            type="button"
+            id="dropdownMenuButton"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Select storage type
+          </button>
+          <div
+            class="dropdown-menu"
+            aria-labelledby="dropdownMenuButton"
+          >';
+  
+          while($row_variants = mysqli_fetch_array($results_variants))
+          {
+              $temp_adjust = $row_variants['temp_id'];
+              $output .= '<a class="dropdown-item" temp-id=' . $row_variants['temp_id'] . ' item-id=' . $row_variants['fridgelist_id'] . '>' . $temp_ref[$temp_adjust] . '</a>';
+          }
+  
+  
+            
+          $output .= '
+          </div>
         </div>
-      </div>
+          </div>
+        </div>
+
+      
 
     
         <div class="inline-edit weight-input">
           <div class="left-edit">
-            <h4>Weight (oz)</h4>
+            <h6>Weight (oz)</h6>
           </div>
           <div class="right-edit">
             <input
@@ -103,7 +112,7 @@ if(isset($_POST["item_id"])){
         </div>
         <div class="inline-edit">
           <div class="left-edit">
-            <h4>Expires</h4>
+            <h6>Expires</h6>
           </div>
           <div class="right-edit">
             <input
@@ -117,7 +126,7 @@ if(isset($_POST["item_id"])){
 
         <div class="inline-edit">
           <div class="left-edit">
-            <h4>Cost ($)</h4>
+            <h6>Cost ($)</h6>
           </div>
           <div class="right-edit">
             <input
@@ -149,20 +158,24 @@ if(isset($_POST["item_id"])){
 
 <script type="text/javascript">
 $(document).ready(function() {
-		
-$('.dropdown-item').click(function() {
-    let selection = $(this).html();
-    $(this).parent().prev().html(selection)
-    $(this).parent().prev().attr('temp-id', $(this).attr('temp-id'))
-    $('.existing-modal').attr('data-id', $(this).attr('item-id'))
+
+  $('.dropdown-item').click(function() {
+  let selection = $(this).html();
+  $(this).parent().prev().html(selection)
+  $(this).parent().prev().attr('temp-id', $(this).attr('temp-id'))
+  $('.existing-modal').attr('data-id', $(this).attr('item-id'))
 })
+
+		
 
 $('#add-item-submit').click(function() {
 
     var item_id = $('.existing-modal').attr('data-id');
-    var item_weight = $('#weight').val();
+    var item_weight = $('.existing-modal #weight').val();
     var item_date = $('.date-final').val();
     var item_cost = $('.currency-input.existing-item').val();
+
+    console.log("item_id:", item_id, " item_weight:", item_weight, " item_date:", item_date, " item_cost:", item_cost)
 
     if(item_date != "" && item_weight != "" && item_cost != "") {
     $.fancybox.close();

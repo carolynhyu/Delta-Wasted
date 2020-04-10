@@ -26,7 +26,7 @@
   $row = $results_user->fetch_assoc();
 
   $user_id = $row['user_id'];
- $sql_items = "SELECT * FROM fridgelists";
+ $sql_items = "SELECT * FROM fridgelists ORDER BY fridgelist_name ASC";
 
   $results_items = $mysqli->query($sql_items);
         if ( !$results_items ) {
@@ -46,6 +46,15 @@
             $mysqli->close();
             exit();
         }
+
+        $sql_categories_2 = "SELECT * FROM categories";
+
+        $results_categories_2 = $mysqli->query($sql_categories_2);
+              if ( !$results_categories_2 ) {
+                  echo $mysqli->error;
+                  $mysqli->close();
+                  exit();
+              }
 
   $mysqli->close();
 
@@ -80,7 +89,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <h4>Add ingredients</h4>
-                  <a data-fancybox data-src="#custom-ingredient-modal">
+                  <a data-fancybox class="open-data" data-src="#custom-ingredient-modal">
                     <button
                       type="button"
                       class="btn btn-primary button-after-header right-float-button"
@@ -117,7 +126,7 @@
                 <div class="col-md-12">
                   <div class="dropdown">
                     <button
-                      class="btn btn-secondary dropdown-toggle"
+                      class="btn btn-secondary dropdown-toggle filter-button"
                       type="button"
                       id="dropdownMenuButton"
                       data-toggle="dropdown"
@@ -140,23 +149,21 @@
                   </div>
                   <div class="dropdown">
                     <button
-                      class="btn btn-secondary dropdown-toggle"
+                      class="btn btn-secondary dropdown-toggle sort-button"
                       type="button"
                       id="dropdownMenuButton"
                       data-toggle="dropdown"
                       aria-haspopup="true"
                       aria-expanded="false"
                     >
-                      Sort
+                    Sort
                     </button>
                     <div
-                      class="dropdown-menu"
+                      class="dropdown-menu sort-menu"
                       aria-labelledby="dropdownMenuButton"
                     >
-                      <a class="dropdown-item" href="#">Most added by you</a>
-                      <a class="dropdown-item" href="#">Alphabetical</a>
-                      <a class="dropdown-item" href="#">Expires quickest</a>
-                      <a class="dropdown-item" href="#">Expires slowest</a>
+                      <a class="dropdown-item" href="#" direction="ASC">Alphabetical (Ascending)</a>
+                      <a class="dropdown-item" href="#" direction="DESC">Alphabetical (Descending)</a>
                     </div>
                   </div>
                 </div>
@@ -192,14 +199,14 @@
         <div class="ingredient-image">
           <img src="assets/img/ingredients/olives.png" />
         </div>
-        <h4>Black Olives</h4>
+        <h4>Loading item...</h4>
         <p>
           These values are automatically suggested based off of the ingredient
           you chose. You can edit them if they are not accurate.
         </p>
         <div class="inline-edit weight-input">
           <div class="left-edit">
-            <h4>Weight (oz)</h4>
+            <h6>Weight (oz)</h6>
           </div>
           <div class="right-edit">
             <div class="qty">
@@ -212,7 +219,7 @@
         </div>
         <div class="inline-edit">
           <div class="left-edit">
-            <h4>Expires</h4>
+            <h6>Expires</h6>
           </div>
           <div class="right-edit">
             <input
@@ -226,7 +233,7 @@
 
         <div class="inline-edit">
           <div class="left-edit">
-            <h4>Cost ($)</h4>
+            <h6>Cost ($)</h6>
           </div>
           <div class="right-edit">
             <input
@@ -251,47 +258,39 @@
           <img src="assets/img/ingredients/fruit-general.png" />
         </div>
         <h4>Add a custom ingredient</h4>
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroupFileAddon01"
-              >Upload</span
-            >
+        <p id="customError"></p>
+       
+
+        <div class="inline-edit">
+          <div class="left-edit">
+          <h6>Ingredient name</h6>
           </div>
-          <div class="custom-file">
-            <input
-              type="file"
-              class="custom-file-input"
-              id="inputGroupFile01"
-              aria-describedby="inputGroupFileAddon01"
-            />
-            <label class="custom-file-label" for="inputGroupFile01"
-              >Choose a custom icon...</label
-            >
-          </div>
-        </div>
-        <h4>Ingredient name</h4>
-        <input
-          placeholder="What is your ingredient called?"
+          <div class="right-edit">
+          <input
           type="text"
           name="custom-name"
           class="form-control"
         />
+          </div>
+          <div class="clear: both"></div>
+        </div>
         <div class="inline-edit weight-input">
           <div class="left-edit">
-            <h4>Weight (oz)</h4>
+            <h6>Weight (oz)</h6>
           </div>
           <div class="right-edit">
-            <div class="qty">
-              <span class="minus bg-dark">-</span>
-              <input type="number" class="count" name="qty" value="1" />
-              <span class="plus bg-dark">+</span>
-            </div>
+            <input
+            type="number"
+            class="form-control"
+            name="weight"
+            id="weight"
+          />
           </div>
           <div class="clear: both"></div>
         </div>
         <div class="inline-edit">
           <div class="left-edit">
-            <h4>Category</h4>
+            <h6>Category</h6>
           </div>
           <div class="right-edit">
             <div class="dropdown">
@@ -305,22 +304,19 @@
               >
                 What kind of food?
               </button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">Vegetables</a>
-                <a class="dropdown-item" href="#">Fruits</a>
-                <a class="dropdown-item" href="#">Grains</a>
-                <a class="dropdown-item" href="#">Beans & Nuts</a>
-                <a class="dropdown-item" href="#">Fish & Seafood</a>
-                <a class="dropdown-item" href="#">Meat & Poultry</a>
-                <a class="dropdown-item" href="#">Dairy</a>
-                <a class="dropdown-item" href="#">Other</a>
+              <div class="dropdown-menu customImage" aria-labelledby="dropdownMenuButton">
+              <?php
+                    while($row = mysqli_fetch_assoc($results_categories_2))
+                    {
+                      echo '<a class="dropdown-item" href="#" category-id=' . $row['category_id'] . ' img-data="' . $row['category_img'] . '">' . $row['category'] . '</a>';
+                    } ?>
               </div>
             </div>
           </div>
         </div>
         <div class="inline-edit">
           <div class="left-edit">
-            <h4>Expires</h4>
+            <h6>Expires</h6>
           </div>
           <div class="right-edit">
             <input
@@ -334,20 +330,21 @@
 
         <div class="inline-edit">
           <div class="left-edit">
-            <h4>Cost ($)</h4>
+            <h6>Cost ($)</h6>
           </div>
           <div class="right-edit">
             <input
               type="number"
+              name="costs"
               class="form-control currency-input"
               min="0.01"
               step="0.01"
               max="2500"
-              value="25.67"
+              value=""
             />
           </div>
         </div>
-        <button type="button" class="btn btn-primary button-after-inline-edit">
+        <button type="button" class="btn btn-primary button-after-inline-edit" id="add-custom-submit">
           <span class="fa fa-check fa-fw mr-3"></span>Add ingredient
         </button>
       </div>
@@ -397,6 +394,8 @@ $('.ingredient-inner').click(function() {
       $(document).ready(function() {
 
         $('.ingredient-search').keyup(function() {
+          $('.filter-button').html("Filter by food category")
+          $('.sort-button').html("Sort")
           var term = $(this).val();
           if (term != '') {
             $.ajax({
@@ -430,6 +429,12 @@ $('.ingredient-inner').click(function() {
             titleShow:false
         }); 
 
+        $('.open-data').fancybox(
+        {
+            href:'ajax/test.php',
+            titleShow:false
+        }); 
+
           
 
         $('.categories .dropdown-item').click(function() {
@@ -447,6 +452,7 @@ $('.ingredient-inner').click(function() {
           else {
           var catId = $(this).attr('category-id');
           if (catId != '') {
+            $('.sort-button').html("Sort")
             $.ajax({
               url:"filter.php",
               method: "post",
@@ -459,6 +465,79 @@ $('.ingredient-inner').click(function() {
           }
         }
         });
+
+        $('.sort-menu .dropdown-item').click(function() {
+          if($(this).hasClass('reset')) {
+            $.ajax({
+              url:"search.php",
+              method: "post",
+              data:{search:""},
+              success: function(data) {
+                $('.add-ingredient-boxes .row').html(data)
+              }
+
+            });
+          }
+          else {
+          var sortIt = $(this).attr('direction');
+          console.log('sort direction:',sortIt)
+          $('.filter-button').html("Filter by food category")
+          if (sortIt != '') {
+            $.ajax({
+              url:"sort.php",
+              method: "post",
+              data:{sort:sortIt},
+              success: function(data) {
+                $('.add-ingredient-boxes .row').html(data)
+              }
+
+            });
+          }
+        }
+        });
+
+        
+        $('.customImage a').click(function() {
+          $(".custom-image img").attr("src", $(this).attr("img-data"))
+          $('.ingredient-image.custom-image').css('opacity', '1');
+          $('.ingredient-image.custom-image').css('filter', 'saturate(1)');
+        });
+
+
+        $('#add-custom-submit').click(function() {
+
+var custom_name = $('#custom-ingredient-modal input[name="custom-name"]').val();
+var custom_weight = $('#custom-ingredient-modal input[name="weight"]').val();
+var custom_date = $('#custom-ingredient-modal input[name="expires"]').val();
+var custom_cost = $('#custom-ingredient-modal input[name="costs"]').val();
+var custom_category = $('#custom-ingredient-modal .dropdown-toggle').attr("category-id");
+var category_img = $('#custom-ingredient-modal .ingredient-image img').attr("src");
+
+console.log("custom_name:", custom_name, "custom_weight:", custom_weight, "custom_date:", custom_date)
+
+
+if(custom_name != "" && custom_weight != "" && custom_date != "" && custom_cost != "" && custom_category != "") {
+
+
+$.ajax({
+          url:"addcustom.php",
+          method: "post",
+          data: {custom_name:custom_name,custom_weight:custom_weight,custom_date:custom_date,custom_cost:custom_cost,custom_category:custom_category, category_img:category_img},
+          success: function(data) {
+            alert(data);
+            if(data != "This item already exists!") {
+              $.fancybox.close();
+            }
+          }
+
+        });
+
+
+    }
+    else {
+        alert("Please fill out all required fields")
+    }
+});
 
       });
     </script>
