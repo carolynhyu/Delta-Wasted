@@ -1,5 +1,8 @@
 @import url("https://fonts.googleapis.com/css?family=Muli&display=swap");
 
+a{
+  text-decoration-style: none;
+}
 body {
   font-family: "Muli", sans-serif;
   background-color: #ccc;
@@ -154,6 +157,6 @@ li.nav-item img {
 }
 
 .sidebar-outer {
-  position: absolute !important;
+  position: fixed !important;
   z-index: 99;
 }

@@ -50,9 +50,12 @@ button.btn-primary {
   background-color: #a0d468;
 }
 
-.filter-section,
-.add-ingredient-boxes {
+.filter-section {
   margin-top: 30px;
+}
+
+.add-ingredient-boxes {
+  margin-top: 0px;
 }
 
 input {
@@ -105,6 +108,7 @@ input.form-control::placeholder {
   height: 50px;
   width: 50px;
   transition: background 0.2s ease-in-out;
+  display: none;
 }
 
 .ingredient-check .fa {
@@ -155,6 +159,10 @@ input.form-control::placeholder {
   color: #bbb;
   font-size: 12px;
   text-align: center;
+}
+
+.ingredient-outer {
+  margin-top: 30px;
 }
 
 .qty .count {
@@ -237,7 +245,7 @@ input:disabled {
   text-align: left !important;
 }
 
-.currency-input {
+.currency-input, .weight-input input {
   border-radius: 0px !important;
   border-bottom: 1px solid #ddd !important;
 }
@@ -270,4 +278,22 @@ input:disabled {
 .ingredient-image.custom-image {
   opacity: 0.25;
   filter: saturate(0);
+}
+
+#custom-ingredient-modal .weight-input {
+  margin-top: 0px;
+}
+
+#custom-ingredient-modal #dropdownMenuButton, input[type="date"], .existing-modal #dropdownMenuButton  {
+  border-bottom: 1px solid #ddd;
+  border-radius: 0px;
+}
+
+#custom-ingredient-modal h4, .existing-modal h4 {
+  margin-bottom: 30px;
+  text-align: center !important;
+}
+
+#custom-ingredient-modal h6, .existing-modal h6 {
+  margin-top: 20px;
 }

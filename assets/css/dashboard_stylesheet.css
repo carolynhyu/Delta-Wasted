@@ -1,3 +1,8 @@
+#myChart{
+	height:350px;
+	width: 350px;
+}
+
 #expiringfood li{
 	margin-bottom: 1%;
 	border-radius: 3%;
@@ -67,14 +72,9 @@ td btn-sm{
 	align-content: right;
 }
 
-#myDoughnutChart{
-	width:auto;
-	height:50px;
-}
-
 .food-box{
 	width: 200px;
-	height:280px;
+	height:250px;
 	background-color: white;
 	border-radius: 5%;
 	float: left;

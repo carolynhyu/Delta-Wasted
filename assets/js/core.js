@@ -97,6 +97,14 @@ $(document).ready(function() {
 
 // MODAL
 
-$(".button-after-inline-edit").on("click", function() {
-  $.fancybox.close();
-});
+// $(".button-after-inline-edit").on("click", function() {
+//   $.fancybox.close();
+// });
+
+$('.dropdown-item').click(function() {
+  let selection = $(this).html();
+  $(this).parent().prev().html(selection)
+  $(this).parent().prev().attr('temp-id', $(this).attr('temp-id'))
+  $(this).parent().prev().attr('category-id', $(this).attr('category-id'))
+  $('.existing-modal').attr('data-id', $(this).attr('item-id'))
+})
