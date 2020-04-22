@@ -32,7 +32,7 @@ $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
                 ON mastersheet.fridgelist_id = fridgelists.fridgelist_id
                 LEFT JOIN categories
                 ON fridgelists.category_id = categories.category_id
-                WHERE user_id=$user_id
+                WHERE user_id=$user_id AND expiration_date < CURRENT_DATE
                 GROUP BY categories.category_id;";
 
   $item_results = $mysqli->query($sql_items);
@@ -54,12 +54,6 @@ $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
    $color[] = $item_row['color'];
    $labels[] = $item_row['category'];
 
-      // $data[] = ['labels' => $labels[],
-      //           'datasets' => [{
-      //              'data' => $quantity[],
-      //              'backgroundColor' => $color[]
-      //            }]
-      //          ];
     }
 
 
