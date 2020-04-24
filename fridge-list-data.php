@@ -39,40 +39,38 @@ $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     exit();
   }
 
-  $item_row = $item_results->fetch_assoc();
 
-  // today's date
-  $today_date = strtotime(date('Y-m-d'));
-  $expiration_date = strtotime($item_row['expiration_date']);
-  $days_left = abs(($expiration_date - $today_date)/60/60/24);
-
-  // json if/else statements (append to given variable)
-  $color = '';
-  if ( $days_left >= 7 ) {
-    $color .= '#a0d468';
-  } else if ( $days_left < 7 && $days_left >= 3 ) {
-    $color .= '#ffaf66';
-  } else if ( $days_left < 3 ) {
-    $color .= '#ff6666';
-  } else {
-    $color .= '#000';
-  }
-
-  // $events = '';
-  // while ( $item_row = $item_results->fetch_assoc() ) {
-  //   $events .= '{title: \''. $item_row['item'] . '\', start: \'' . $item_row['expiration_date'];
-  //   $events .= '\', color: \'' . $color . '\'' . '}, ';
-  // }
   $events = [];
 
   while ( $item_row = $item_results->fetch_assoc() ) {
-      $events[] = ['title' => $item_row['item'], 'start' => $item_row['expiration_date'], 'color' => $color];
+    $today_date = strtotime(date('Y-m-d'));
+    $expiration_date = strtotime($item_row['expiration_date']);
+    $days_left = ($expiration_date - $today_date)/60/60/24;
+
+    $color = '';
+    $textColor = '';
+
+  if ( $days_left >= 7 ) {
+    $color = '#a0d468';
+    $textColor = '#000';
+  } else if ( $days_left < 7 && $days_left >= 3 ) {
+    $color = '#ffaf66';
+    $textColor = '#000';
+  } else if ( $days_left < 3 && $days_left >=0 ) {
+    $color = '#ff6666';
+    $textColor = '#000';
+  } else if ( $days_left < 0) {
+    $color = '#000';
+    $textColor = '#FFF';
+  }
+
+      $events[] = ['title' => $item_row['item'], 'start' => $item_row['expiration_date'], 'color' => $color, 'textColor' => $textColor];
     }
 
 
   $events = json_encode($events,JSON_PRETTY_PRINT);
   echo $events;
-
+  // var_dump($item_row); 
   $mysqli->close();
 
 ?>

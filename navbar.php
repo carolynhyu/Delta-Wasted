@@ -13,7 +13,7 @@
       crossorigin="anonymous"
     ></script>
 
-    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"
@@ -42,8 +42,10 @@
               <div id="nav-header">
                 <li class="nav-item toggle">
                   <h3 class="nav-link" href="#">
-                    <img id="nav-logo" src="assets/img/logo.png" alt="Wasted logo" />
+                    <a href="dashboard.php">
+                    <img id="nav-logo" src="assets/img/logo.png" alt="Wasted logo" /></a>
                     <span id="wasted" class="desc">Wasted</span>
+
                   </h3>
                   <p>Hey <?php echo $row['user_firstname'];?>!</p>
 
@@ -121,13 +123,13 @@
                 aria-expanded="false"
                 class="list-group-item list-group-item-action flex-column align-items-start"
                 style="background-color: #a0d468;"
-                href="#"
+                href="add-ingredients.php"
               >
                 <div
                   class="d-flex w-100 justify-content-start align-items-center"
                 >
                   <span class="fa fa-utensils fa-fw mr-3"></span>
-                  <span class="menu-collapsed">Recipes</span>
+                  <span class="menu-collapsed">Add Ingredients</span>
                 </div>
               </a>
 
@@ -184,10 +186,10 @@
               <div id="nav-add">
                 <li class="nav-item" id="nav-add-li">
 
-                  <a id="nav-add-a" class="nav-link" href="add-ingredients.php">
+                  <a id="nav-add-a" class="nav-link" href="information.php">
 
-                    <img src="assets/img/plus.png" alt="Add ingredients" />
-                    <span class="desc toggle">Add Ingredient</span>
+                    <img src="assets/img/question.png" alt="Add ingredients" />
+                    <span class="desc toggle">Why Food Waste?</span>
                   </a>
                 </li>
               </div>
@@ -200,7 +202,7 @@
         </div>
 
 
-    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <!-- <script src="assets/js/core.js"></script> -->
 
   </body>

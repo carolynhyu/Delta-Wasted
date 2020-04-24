@@ -27,7 +27,50 @@
 
   $user_id = $row['user_id'];
 
+//************FOOD WASTE PERCENTAGE CALCULATION****************//
+  $sql_percent = "SELECT Round(SUM(quantity)/ SUM(og_quantity)*100,2) AS waste_percent, MONTHNAME(expiration_date) AS month 
+                  FROM mastersheet 
+                  WHERE user_id = $user_id AND expiration_date < CURRENT_DATE AND MONTH(expiration_date)= MONTH(CURRENT_DATE);";
+
+  $results_waste_percentage = $mysqli->query($sql_percent);
+    
+    if ( !$results_waste_percentage ) {
+        echo $mysqli->error;
+        $mysqli->close();
+        exit();
+    }
+
+//***********PAYTON'S***************//
+  $sql_items = "SELECT * FROM fridgelists";
+
+  $results_items = $mysqli->query($sql_items);
+    if ( !$results_items ) {
+        echo $mysqli->error;
+        $mysqli->close();
+        exit();
+    }
+
+     //RETRIEVE SPECIFIC USER'S FRIDGE LIST ITEMS
+    $sql_user_fridgelist = "SELECT user_id, fridgelists.img_url AS image, fridgelists.fridgelist_name AS item, mastersheet.fridgelist_id AS item_id, mastersheet.quantity AS quantity, mastersheet.expiration_date AS date
+        FROM mastersheet
+        LEFT JOIN fridgelists
+              ON mastersheet.fridgelist_id=fridgelists.fridgelist_id
+              WHERE mastersheet.user_id=$user_id AND mastersheet.expiration_date > CURRENT_DATE
+               ORDER BY expiration_date ASC;";
+
+    $results_user_fridgelist = $mysqli->query($sql_user_fridgelist);
+
+    if ( !$results_user_fridgelist ) {
+        echo $mysqli->error;
+        $mysqli->close();
+        exit();
+    }
+//***********PAYTON'S***************//
+
   $mysqli->close();
+
+  include "donut-labels.php";
+  include "dashboard-linegraph.php";
 
 ?>
 
@@ -50,7 +93,7 @@
       crossorigin="anonymous"
     ></script>
 
-    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"
@@ -59,51 +102,82 @@
 
     <link rel="stylesheet" href="assets/css/main.css" />
 
-    <script>
-      window.onload = function () {
-
-      var options = {
-        exportEnabled: true,
-        animationEnabled: true,
-        title: {
-        },
-        data: [
-        {
-          type: "splineArea",
-          dataPoints: [
-            { y: 10 },
-            { y: 6 },
-            { y: 14 },
-            { y: 12 },
-            { y: 19 },
-            { y: 14 },
-            { y: 26 },
-            { y: 10 },
-            { y: 22 }
-          ]
-        }
-        ]
-      };
-      $("#chartContainer").CanvasJSChart(options);
-
-      }
-    </script>
     <style>
-            #scrollable {
-/*      background-color: lightblue;*/
-/*      width: 500px;*/
+      #scrollable {
+/*    background-color: lightblue;*/
+     /* width: 400px;*/
       margin-left: auto;
       margin-right: auto;
       height: 40vh;
       overflow: scroll;
     }
 
-    #fridge-list td {
+   #fridge-list td {
       border: none;
+   /*   margin-left: 5%*/
     }
 
     #fridge-list tr {
-      border-top: 1px solid #dee2e6;
+      padding: 15px 0;
+      border-top: 15px solid #f5f5f5;
+    }
+
+    .food-name{
+      font-weight:bold;
+    }
+
+    .food_pic{
+      padding-left: 11%;
+    }
+
+    #main-tree p{
+      color: gray;
+    }
+
+    #displayed-tree{
+      width:120px;
+      height:auto;
+      margin-left: 39%;
+    }
+
+    #sub-trees{
+      margin-left: 3%;
+    }
+
+    .sub-tree{
+      width:30px;
+      height:auto;
+      margin: 0 13%;
+    }
+
+    #user-tree{
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .tree-text{
+      color:black;
+    }
+
+    .percent-text{
+      margin-top: -6%;
+      color: gray;
+      font-weight: lighter;
+    }
+
+    #yellow-tree-text{
+      padding-left: 22%;
+    }
+
+    #bare-tree-text{
+      padding-left: 22%;
+    }
+
+    .waste-percentage{
+      float:left;
+      padding-left: 15%;
+      font-size: .8em;
+      color:gray;
     }
     </style>
 
@@ -129,278 +203,138 @@
               </div>
 
         <!--ROW 2 EXPIRING SOON LIST AND CATEGORY DONUT GRAPH-->
+        <!--*************************PAYTON'S******************-->
               <div class="row">
                 <div class="col-md-6" id="expiringfood">  <!--A list of expiring soon food-->
                   <div id="scrollable">
                   <table id="fridge-list" class="table">
-                    <tbody>
-                      <tr class="row align-items-center">
-                        <td class="col-md-3"><img class="food_pic" alt="food" src="assets/img/ingredients/mango.png"></td>
-                        <td class="col-md-4 align-middle">
-                          <div class="food-name">Mangos</div>
-                          <div class="food-count">5 Count</div>
-                        </td>
-                        <td class="col-md-3 date">
-                          <img class="clock_pic align-middle" alt="clocks" src="assets/img/clocks/Vector-1.png">
-                          <div class="red-clock exp-date">Feb. 28th</div>
-                        </td>
-                      <!--   <td class="col-md-1 align-middle">
-                          <button type="button" class="btn-sm btn-outline-warning edit">
-                            <span>Edit</span>
-                          </button>
-                        </td> -->
-                        <td class="col-md-2">
-                          <img class="delete" alt="food" src="assets/img/delete.png">
-                        </td>
-                      </tr>
+                    <tbody id="tbody2">
 
+                     <?php while ($row_table = $results_user_fridgelist->fetch_assoc() ) : ?> 
                       <tr class="row align-items-center">
-                        <td class="col-md-3">
-                          <img class="food_pic" alt="food" src="assets/img/ingredients/fish-steak.png">
-                        </td>
+                        <input type="hidden" id="user_id" value="<?php echo $row_table['user_id']; ?>">
+                        <input type="hidden" id="fridgelist_id" value="<?php echo $row_table['item_id']; ?>">
+                        <td class="col-md-5"><img class="food_pic" alt="<?php echo $row_table['fridgelist_name']; ?>" src="<?php echo $row_table['image']; ?>"></td>
                         <td class="col-md-4 align-middle">
-                          <div class="food-name">Tuna Steak</div>
-                          <div class="food-count">5 ounces</div>
+                          <div class="food-name"><?php echo $row_table['item']; ?></div>
+                          <input type="hidden" id="quantity_id" value="<?php echo $row_table['quantity']; ?>">
+                          <div class="food-count"><?php echo $row_table['quantity']; ?> ounces</div>
                         </td>
                         <td class="col-md-3 date">
-                          <img class="clock_pic align-middle" alt="clocks" src="assets/img/clocks/Vector-1.png">
-                          <div class="red-clock exp-date">Mar. 1st</div>
-                        </td>
-                        <td class="col-md-2">
-                          <img class="delete" alt="food" src="assets/img/delete.png">
-                        </td>
-                      </tr>
+                          <input type="hidden" id="expiration_date" value="<?php echo $row_table['date']; ?>">
 
-                      <tr class="row align-items-center">
-                        <td class="col-md-3 align-middle">
-                          <img class="food_pic" alt="food" src="assets/img/ingredients/brussels-sprouts.png">
-                        </td>
-                        <td class="col-md-4 align-middle">
-                          <div class="food-name">Brussel Sprouts</div>
-                          <div class="food-count">10 ounces</div>
-                        </td>
-                        <td class="col-md-3 date">
-                          <img class="clock_pic align-middle" alt="clocks" src="assets/img/clocks/Vector-2.png"><div class="yellow-clock exp-date">Mar. 11th</div>
-                        </td>
-                        <td class="col-md-2">
-                          <img class="delete" alt="food" src="assets/img/delete.png">
-                        </td>
-                      </tr>
+                          <?php
 
-                      <tr class="row align-items-center">
-                        <td class="col-md-3 align-middle">
-                          <img class="food_pic" alt="food" src="assets/img/ingredients/cherry.png">
-                        </td>
-                        <td class="col-md-4 align-middle">
-                          <div class="food-name">Cherries</div>
-                          <div class="food-count">1 lb.</div>
-                        </td>
-                        <td class="col-md-3 date">
-                          <img class="clock_pic align-middle" alt="clocks" src="assets/img/clocks/Vector-2.png">
-                          <div class="yellow-clock exp-date">Mar. 13th</div>
-                        </td>
-                        <td class="col-md-2">
-                          <img class="delete" alt="food" src="assets/img/delete.png">
-                        </td>
-                      </tr>
+                            $today_date = strtotime(date('Y-m-d'));
+                            $expiration_date = strtotime($row_table['date']);
+                            $days_left = ($expiration_date - $today_date)/60/60/24;
 
-                      <tr class="row align-items-center">
-                        <td class="col-md-3 align-middle">
-                          <img class="food_pic" alt="food" src="assets/img/ingredients/bread-1.png">
-                        </td>
-                        <td class="col-md-4 align-middle">
-                          <div class="food-name">French Bread</div>
-                          <div class="food-count">1 loaf (8 ounces)</div>
-                        </td>
-                        <td class="col-md-3 date">
-                          <img class="clock_pic align-middle" alt="clocks" src="assets/img/clocks/Vector-2.png"><div class="yellow-clock exp-date">Mar. 15th</div>
-                        </td>
-                        <td class="col-md-2">
-                          <img class="delete" alt="food" src="assets/img/delete.png">
-                        </td>
-                      </tr>
+                            $orgDate = $row_table['date'];  
+                            $newDate = date("M jS", strtotime($orgDate));
 
-                      <tr class="row align-items-center">
-                        <td class="col-md-3 align-middle">
-                          <img class="food_pic" alt="food" src="assets/img/ingredients/eggs.png">
-                        </td>
-                        <td class="col-md-4 align-middle">
-                          <div class="food-name">Eggs</div>
-                          <div class="food-count">1 dozen (20.5 ounces)</div>
-                        </td>
-                        <td class="col-md-3 date">
-                          <img class="clock_pic align-middle" alt="clocks" src="assets/img/clocks/Vector.png">
-                          <div class="green-clock exp-date">Mar. 19th</div>
-                        </td>
-                        <td class="col-md-2">
-                          <img class="delete" alt="food" src="assets/img/delete.png">
-                        </td>
-                      </tr>
+                          if ( $days_left >= 7 ) : ?>
+                            <img class="clock_pic align-middle" alt="clocks" src="assets/img/clocks/Vector.png">
+                            <div class="green-clock exp-date">
+                          <?php echo $newDate; ?></div>
 
-                      <tr class="row align-items-center">
-                        <td class="col-md-3 align-middle">
-                          <img class="food_pic" alt="food" src="assets/img/ingredients/garlic.png">
-                        </td>
-                        <td class="col-md-4 align-middle">
-                          <div class="food-name">Garlic</div>
-                          <div class="food-count">2 ounces</div>
-                        </td>
-                        <td class="col-md-3 date">
-                          <img class="clock_pic align-middle" alt="clocks" src="assets/img/clocks/Vector.png"><div class="green-clock exp-date">Apr. 4th</div>
-                        </td>
-                        <td class="col-md-2">
-                          <img class="delete" alt="food" src="assets/img/delete.png">
-                        </td>
-                      </tr>
+                          <?php elseif ( $days_left < 7 && $days_left >= 3 ): ?>
+                            <img class="clock_pic align-middle" alt="clocks" src="assets/img/clocks/Vector-1.png">
+                            <div class="yellow-clock exp-date">
+                          <?php echo $newDate; ?></div>
 
-                      <tr class="row align-items-center">
-                        <td class="col-md-3 align-middle">
-                          <img class="food_pic" alt="food" src="assets/img/ingredients/bacon.png">
-                        </td>
-                        <td class="col-md-4 align-middle">
-                          <div class="food-name">Bacon</div>
-                          <div class="food-count">2 ounces</div>
-                        </td>
-                        <td class="col-md-3 date">
-                          <img class="clock_pic align-middle" alt="clocks" src="assets/img/clocks/Vector.png"><div class="green-clock exp-date">Apr. 7th</div>
-                        </td>
-                        <td class="col-md-2">
-                          <img class="delete" alt="food" src="assets/img/delete.png">
+                          <?php elseif ( $days_left < 3 && $days_left >=0 ): ?>
+                            <img class="clock_pic align-middle" alt="clocks" src="assets/img/clocks/Vector-2.png">
+                            <div class="red-clock exp-date">
+                            <?php echo $newDate; ?></div>
+
+                          <?php elseif ( $days_left < 0 ): ?>
+                            <img class="clock_pic align-middle" alt="clocks" src="assets/img/clocks/Vector-3.png">
+                            <div class="black-clock exp-date">
+                            <?php echo $newDate; ?></div>
+                         
+                          <?php endif; ?>
+
                         </td>
                       </tr>
+                      <?php endwhile; ?>
+
                     </tbody>
                   </table>
                 </div> <!--scrollable-->
                 </div>
-                 <!--  <ul class="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img class="food_pic" alt="food" src="assets/img/ingredients/apple.png">
-
-
-                      <span class="badge badge-primary badge-pill">14</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      Dapibus ac facilisis in
-                      <span class="badge badge-primary badge-pill">2</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      Morbi leo risus
-                      <span class="badge badge-primary badge-pill">1</span>
-                    </li>
-                  </ul> -->
-                <div class="col-md-6" id="chartjs-wrapper"> <!--GOALS boxes-->
-                  <canvas id="chartjs-4" class="chartjs-wrapper chartjs"></canvas>
-                    <script>new Chart(document.getElementById("chartjs-4"),
-                      {"type":"doughnut",
-                      "data":{
-                        "labels":["Meat","Vegetables","Fruits"],
-                        "datasets":[{"label":"My First Dataset","data":[300,50,100],
-                        "backgroundColor":["rgb(255, 99, 132)",
-                        "rgb(160, 212, 104)","rgb(255, 205, 86)"]}]}});
-                      </script>
+          
+              <!--Doughnut Chart-->
+                 <div class="col-md-6" id="chartjs-wrapper"> 
+                    <canvas id="myChart"></canvas>
                 </div>
             </div> <!--END of List and CHART-->
              
- 
-                  <!-- <button
-                    type="button"
-                    class="btn btn-primary right-float-button disabled"
-                  >
-                    Add selected ingredients<span
-                      class="fa fa-arrow-right fa-fw ml-3"
-                    ></span>
-                  </button> -->
 
 
 <!--ROW 3 TITLE: GOALS and AREA GRAPH-->
         <div class="row" id="title-goals-and-area">
-          <div class="col-md-6">
-            <h4>Goals</h4>
-          </div>
-          <div class="col-md-4">
-            <h4>Savings</h4>
-          </div>
-          <div class="dropdown col-md-2">
-              <button
-                class="btn btn-secondary dropdown-toggle"
-                type="button"
-                id="dropdownMenuButton"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                Last Year
-              </button>
-              <div
-                class="dropdown-menu"
-                aria-labelledby="dropdownMenuButton"
-              >
-                <a class="dropdown-item" href="#">Last Week</a>
-                <a class="dropdown-item" href="#">2 Weeks Ago</a>
-                <a class="dropdown-item" href="#">3 Weeks Ago</a>
-                <a class="dropdown-item" href="#">Last Month</a>
-              </div>
-            </div> <!--END of DROPDOWN-->
-          </div>
-        </div> <!--END OF TITLE GOALS AND AREA-->
+    
+            <div class="col-md-6">
+              <h4>Saving the Environment</h4>
+            </div>
+            <div class="col-md-6">
+              <h4>Money Wasted</h4>
+            </div>
+          </div><!--END OF TITLE GOALS AND AREA-->
+      
 
 <!--ROW 4 GOALS and AREA GRAPH-->
         <div class="row" id="goals-and-area">
           <div class="col-md-6" id="goals">
+            <div id="main-tree">
+              <p>The lower the waste percentage, the greener your tree gets</p>
+              <!-- If waste % < 20 then img = tree1, 20-80% then img = tree2, 80 > tehn img =tree 3 -->
+              <?php 
 
-              <div class="food-box">
-                <img class="goal-img" alt="food-img" src="assets/img/ingredients/bacon.png" />
-                <div class="food-title">
-                  Bacon
-                </div>
-                <div class="over-weight-mssg">
-                </div>
-                <div class="food-weight">
-                  1 lbs / <span class="goal-weight">1.5 lbs</span>
-                </div><!--End of FOOD-WEIGHT-->
-                <button type="button" class="btn align-self-end btn-primary btn-lg btn-block">
-                 Edit Goal
-                </button>
-              </div><!--END of food-box-->
+              $row_percent = $results_waste_percentage->fetch_assoc();
+              $percent = $row_percent['waste_percent'];
 
-              <div class="food-box">
-                <img class="goal-img" alt="food-img" src="assets/img/ingredients/garlic.png" />
-                <div class="food-title">
-                  Garlic
-                </div>
-                <div class="over-weight-mssg">
-                  1 oz over!
-                </div>
-                <div class="food-weight">
-                  5 oz / <span class="goal-weight">4 oz</span>
-                </div><!--End of FOOD-WEIGHT-->
-                <button type="button" class="btn btn-primary btn-lg btn-block">
-                 Edit Goal
-                </button>
-              </div><!--END of food-box-->
 
-          </div> <!--END of GOALS-->
+              if($percent<20): ?> 
+                <img id="displayed-tree" src="assets/img/dashboard/tree.png" alt="tree">
+  
+
+              <?php elseif($percent >= 20 && $percent <= 80) : ?>
+                 <img id="displayed-tree" src="assets/img/dashboard/tree2.png" alt="tree">
+            
+
+              <?php elseif($percent > 80) : ?>
+               <img id="displayed-tree" src="assets/img/dashboard/tree3.png" alt="tree">
+              
+
+              <?php endif; ?>
+             
+            </div><!--END of main-tree-->
+            <div id="user-tree">
+              <p id="usertree" class="tree-text"><?php echo $row['user_firstname'];?>'s <?php echo date(F,time()) ?> Tree </p>
+              <p id="percenttree" class="percent-text"> <?php echo $percent ?>% of your food was wasted this month</p>
+            </div><!--END of user-tree-->
+            <div id="sub-trees">
+              <img id="tree1" class="sub-tree" src="assets/img/dashboard/tree.png" alt="tree">
+              <img id="tree2" class="sub-tree" src="assets/img/dashboard/tree2.png" alt="tree">
+              <img id="tree3" class="sub-tree" src="assets/img/dashboard/tree3.png" alt="tree">
+            </div><!--END of sub-trees-->
+            <div id="subtree-description">
+              <div id="green-tree-text" class="waste-percentage"> < 20% </div>
+              <div id="yellow-tree-text" class="waste-percentage"> 20% - 80% </div>
+              <div id="bare-tree-text" class="waste-percentage"> > 80% </div>
+            </div><!--END of subtree-description-->
+
+          </div><!--END of GOALS--> 
 
           <div class="col-md-6" id="savings">
-            <!-- <div class="row mb-4">
-              <div class="col-md-6 box text-center" id="savings-past-year">
-                <div>
-                  <span class="price">$1,325.56</span><br>
-                  <span class="saving-caption">Total savings in the past year</span>
-                </div>
-              </div>
-              <div class="col-md-6 box text-center" id="savings-past-month">
-                <div>
-                  <span class="price">$110.45</span><br>
-                  <span class="saving-caption">Average savings per month</span>
-                </div>
-              </div>
-            </div> -->
-
             <div class="row">
-              <div id="chartContainer" style="height: 250px; width: 100%; background-color: gray;"></div>
-            </div>
-          </div> <!--END of SAVINGS-->
+                <div class="chartjs-wrapper">
+                  <canvas id="myChart2" width="500" height="300px"></canvas>
+                </div><!--End of chartjs-wrapper for savings-->
+            </div><!--End of ROW-->
+          </div><!--End of SAVINGS-->
+          
 
         </div><!--END of GOALS and AREA-->
 
@@ -413,41 +347,9 @@
 
 
 
-
-
-<!--DONUT CHART-->
-    <script src="assets/js/Chart.bundle.min.js">
-      var ctx = document.getElementById('myDoughnutChart').getContext('2d');
-
-      var myDoughnutChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: data,
-        options: {}
-      });
-
-      var data = {
-            datasets: [{
-              data: [10, 20, 30]
-            }],
-
-            // These labels appear in the legend and in the tooltips when hovering different arcs
-              labels: [
-                'Red',
-                'Yellow',
-                'Green'
-            ]
-      };
-
-    </script>
-
-<!--END of DONUT CHART STUFF-->
-
-
-
     
     <!--AREA CHART STUFF-->
-    <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
-    <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+
     <!--END of AREA CHART STUFF-->
 
     <script
@@ -466,7 +368,55 @@
       crossorigin="anonymous"
     ></script>
     <script src="assets/js/core.js"></script>
-    
+
+    <!--*********************DOUGHNUT CHART*********************-->
+    <script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: <?php echo $labels ?>,
+            datasets: [{
+                data: <?php echo $quantity ?>,
+                backgroundColor: <?php echo $color ?>
+            }]
+        },
+        
+    });
+    </script>
+
+    <!--**************SAVINGS GRAPH*******************-->
+    <script>
+    var ctx = document.getElementById('myChart2').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: <?php echo $month_labels ?>,
+            datasets: [{
+                label: 'Wasted Money $',
+                data: <?php echo $cost_sum ?>,
+                backgroundColor: [
+                    'rgba(160, 212, 104, 0.2)'
+                ],
+                borderColor: [
+                    'rgb(160, 212, 104)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            fill: true,
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+    </script>
 
   </body>
 </html>
