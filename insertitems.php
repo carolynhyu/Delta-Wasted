@@ -30,7 +30,7 @@
 
 
     // Username & email are available.
-    $sql = "INSERT INTO `mastersheet` (`user_id`, `fridgelist_id`, `quantity`, `expiration_date`, `cost`) VALUES ('$user_id', '$item_id', '$item_weight', '$item_date', '$item_cost')";
+    $sql = "INSERT INTO `mastersheet` (`user_id`, `fridgelist_id`, `quantity`, `expiration_date`, `cost`, `og_quantity`) VALUES ('$user_id', '$item_id', '$item_weight', '$item_date', '$item_cost', '$item_weight')";
 
     $results = $mysqli->query($sql);
 

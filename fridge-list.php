@@ -50,7 +50,7 @@
     }
 
     //RETRIEVE SPECIFIC USER'S FRIDGE LIST ITEMS
-    $sql_user_fridgelist = "SELECT user_id, fridgelists.img_url AS image, fridgelists.fridgelist_name AS item, mastersheet.fridgelist_id AS item_id, mastersheet.quantity AS quantity, mastersheet.expiration_date AS date
+    $sql_user_fridgelist = "SELECT general_id, user_id, fridgelists.img_url AS image, fridgelists.fridgelist_name AS item, mastersheet.fridgelist_id AS item_id, mastersheet.quantity AS quantity, mastersheet.expiration_date AS date
         FROM mastersheet
         LEFT JOIN fridgelists
               ON mastersheet.fridgelist_id=fridgelists.fridgelist_id
@@ -94,7 +94,7 @@
             console.log('event left!', info.event);
           },
 
-          events: window.location.origin + '/fridge-list-data.php'
+          events: window.location.origin + '/Delta-Wasted-develop/fridge-list-data.php'
 
         });
 
@@ -284,14 +284,6 @@
                 <a class="dropdown-item" sort-id="date-descending">Expires slowest</a>
             </div>
           </div>
-          <a data-fancybox data-src="#custom-ingredient-modal">
-            <button
-            type="button"
-            class="btn btn-primary button-after-header right-float-button"
-            >
-            <span class="fa fa-plus-circle fa-fw mr-3"></span>Add new ingredient
-          </button>
-        </a>
         <div style="display:none">
       <div id="ingredient-modal" class="existing-modal" data-id=>
         <div class="ingredient-image">
@@ -349,114 +341,6 @@
         </button>
       </div>
     </div>
-
-        <div style="display:none">
-          <div id="custom-ingredient-modal">
-            <div class="ingredient-image custom-image">
-              <img src="assets/img/ingredients/fruit-general.png" />
-            </div>
-            <h4>Add a custom ingredient</h4>
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroupFileAddon01"
-                >Upload</span
-                >
-              </div>
-              <div class="custom-file">
-                <input
-                type="file"
-                class="custom-file-input"
-                id="inputGroupFile01"
-                aria-describedby="inputGroupFileAddon01"
-                />
-                <label class="custom-file-label" for="inputGroupFile01"
-                >Choose a custom icon...</label
-                >
-              </div>
-            </div>
-            <h4>Ingredient name</h4>
-            <input
-            placeholder="What is your ingredient called?"
-            type="text"
-            name="custom-name"
-            class="form-control"
-            />
-            <div class="inline-edit weight-input">
-              <div class="left-edit">
-                <h4>Weight (oz)</h4>
-              </div>
-              <div class="right-edit">
-                <div class="qty">
-                  <span class="minus bg-dark">-</span>
-                  <input type="number" class="count" name="qty" value="1" />
-                  <span class="plus bg-dark">+</span>
-                </div>
-              </div>
-              <div class="clear: both"></div>
-            </div>
-            <div class="inline-edit">
-              <div class="left-edit">
-                <h4>Category</h4>
-              </div>
-              <div class="right-edit">
-                <div class="dropdown">
-                  <button
-                  class="btn btn-secondary dropdown-toggle"
-                  type="button"
-                  id="dropdownMenuButton"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                  >
-                  What kind of food?
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" href="#">Vegetables</a>
-                  <a class="dropdown-item" href="#">Fruits</a>
-                  <a class="dropdown-item" href="#">Grains</a>
-                  <a class="dropdown-item" href="#">Beans & Nuts</a>
-                  <a class="dropdown-item" href="#">Fish & Seafood</a>
-                  <a class="dropdown-item" href="#">Meat & Poultry</a>
-                  <a class="dropdown-item" href="#">Dairy</a>
-                  <a class="dropdown-item" href="#">Other</a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="inline-edit">
-            <div class="left-edit">
-              <h4>Expires</h4>
-            </div>
-            <div class="right-edit">
-              <input
-              type="date"
-              class="form-control"
-              name="expires"
-              id="expires"
-              />
-            </div>
-          </div>
-
-          <div class="inline-edit">
-            <div class="left-edit">
-              <h4>Cost ($)</h4>
-            </div>
-            <div class="right-edit">
-              <input
-              type="number"
-              class="form-control currency-input"
-              min="0.01"
-              step="0.01"
-              max="2500"
-              value="25.67"
-              />
-            </div>
-          </div>
-          <button type="button" class="btn btn-primary button-after-inline-edit">
-            <span class="fa fa-check fa-fw mr-3"></span>Add ingredient
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 </div>
@@ -469,16 +353,17 @@
 
                      <?php while ($row_table = $results_user_fridgelist->fetch_assoc() ) : ?> 
                       <tr class="row align-items-center">
-                        <input type="hidden" id="user_id" value="<?php echo $row_table['user_id']; ?>">
-                        <input type="hidden" id="fridgelist_id" value="<?php echo $row_table['item_id']; ?>">
+                        <input type="hidden" id="user_id_<?php echo $row_table['general_id']; ?>" value="<?php echo $row_table['user_id']; ?>">
+                        <input type="hidden" id="general_id_<?php echo $row_table['general_id']; ?>" value="<?php echo $row_table['general_id']; ?>">
+                        <input type="hidden" id="fridgelist_id_<?php echo $row_table['general_id']; ?>" value="<?php echo $row_table['item_id']; ?>">
                         <td class="col-md-2"><img class="food_pic" alt="<?php echo $row_table['fridgelist_name']; ?>" src="<?php echo $row_table['image']; ?>"></td>
                         <td class="col-md-3 align-middle">
                           <div class="food-name"><?php echo $row_table['item']; ?></div>
-                          <input type="hidden" id="quantity_id" value="<?php echo $row_table['quantity']; ?>">
+                          <input type="hidden" id="quantity_id_<?php echo $row_table['general_id']; ?>" value="<?php echo $row_table['quantity']; ?>">
                           <div class="food-count"><?php echo $row_table['quantity']; ?> ounces</div>
                         </td>
                         <td class="col-md-3 date">
-                          <input type="hidden" id="expiration_date" value="<?php echo $row_table['date']; ?>">
+                          <input type="hidden" id="expiration_date_<?php echo $row_table['general_id']; ?>" value="<?php echo $row_table['date']; ?>">
 
                           <?php
 
@@ -518,13 +403,35 @@
         <!--************EDIT FANCY BOX****************-->
 
                             <a data-fancybox class="ope" data-src="#edit-modal">
-                              <img id="edit-item-submit" class="edit" alt="food" src="assets/img/edit.png">
+                              <img general_id="<?php echo $row_table['general_id']; ?>" class="edit edit-item-submit" alt="food" src="assets/img/edit.png">
                             </a>
 
+        <!--************EDIT FANCY BOX****************-->
 
-<!--   <div style="display:none">
-      <div id="edit-modal" class="existing-modal" data-id=>
-       <div class="ingredient-image">
+                        </td>
+
+                        <td class="col-md-2">
+                          <img general_id="<?php echo $row_table['general_id']; ?>" class="delete delete-item-submit" alt="food" src="assets/img/delete.png">
+                        </td>
+                      </tr>
+                      <?php endwhile; ?>
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+     
+
+                <!--calendar-->
+
+                  <div class="col-md-6" id='calendar'></div>
+
+            </div>
+
+
+<div style="display:none">
+      <div id="edit-modal" class="existing-modal" data-id="" >
+         <!-- <div class="ingredient-image">
           <img src="assets/img/ingredients/olives.png" />
         </div>
         <h4>Black Olives</h4>
@@ -578,7 +485,7 @@
           <span class="fa fa-check fa-fw mr-3"></span>Add ingredient
         </button>
       </div>
-    </div> -->
+    </div>
 
     <div style="display:none">
       <div id="custom-ingredient-modal">
@@ -684,32 +591,9 @@
         </div>
         <button type="button" class="btn btn-primary button-after-inline-edit">
           <span class="fa fa-check fa-fw mr-3"></span>Add ingredient
-        </button>
+        </button> -->
       </div>
     </div>
-
-
-        <!--************EDIT FANCY BOX****************-->
-
-                        </td>
-                        <td class="col-md-2">
-                          <img id="delete-item-submit" class="delete" alt="food" src="assets/img/delete.png">
-                        </td>
-                      </tr>
-                      <?php endwhile; ?>
-
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-     
-
-                <!--calendar-->
-
-                  <div class="col-md-6" id='calendar'></div>
-
-            </div>
-
         
 
             <script type="text/javascript">
@@ -776,40 +660,40 @@
                 });
 
                 // SORT ASCENDING FUNCTION
-                $('.sort .dropdown-item').change(function() {
+                $('.dropdown-item').click(function() {
                   var sortId = $(this).attr('sort-id');                    
-                    if (sortId = 'ascending') {
+                    if (sortId == 'ascending') {
                       $.ajax({
                         url:"fridge-list-ascending.php",
+                        method: "post",
+                        data:{sort:sortId},
                         success: function(data) {
                           $('#tbody2').html(data)
                         }
                       });
-                    }
-
-                    else if (sortId = 'descending'){
+                    } else if (sortId == 'descending') {
                       $.ajax({
                         url:"fridge-list-descending.php",
+                        method: "post",
+                        data:{sort:sortId},
                         success: function(data) {
                           $('#tbody2').html(data)
                         }
                       });
-                    }
-
-
-                    else if (sortId = 'date-ascending'){
+                    } else if (sortId == 'date-ascending'){
                       $.ajax({
                         url:"fridge-list-date-ascending.php",
+                        method: "post",
+                        data:{sort:sortId},
                         success: function(data) {
                           $('#tbody2').html(data)
                         }
                       });
-                    }
-
-
-                    else if (sortId = 'date-descending'){
+                    } else {
                       $.ajax({
                         url:"fridge-list-date-descending.php",
+                        method: "post",
+                        data:{sort:sortId},
                         success: function(data) {
                           $('#tbody2').html(data)
                         }
@@ -820,14 +704,16 @@
                   });
 
                 //EDIT FUNCTION
-                $('.edit').click(function() {
-                	// var item_id = $(this).attr('item-id');
+                $('.edit-item-submit').click(function() {
+                	var general_id = $(this).attr('general_id');
+                  console.log(general_id);
 
                   //*********CAROLYN*************//
-                  var userID = $('#user_id').val();
-                  var expDate = $('#expiration_date').val();
-                  var friID = $('#fridgelist_id').val();
-                  var quanID = $('#quantity_id').val();
+                  var userID = $('#user_id_' + general_id).val();
+                  var expDate = $('#expiration_date_' + general_id).val();
+                  var friID = $('#fridgelist_id_' + general_id).val();
+                  var quanID = $('#quantity_id_' + general_id).val();
+                  var genID = $('#general_id_' + general_id).val();
                   console.log(userID);
                   console.log(expDate);
                   console.log(friID);
@@ -841,9 +727,10 @@
                 		url:"item-2.php",
                 		method: "post",
                 		// data:{"item_user_id":userID, "item_expiration":expDate, "item_id":friID, "item_quantity":quanID},
-                		data:{item_user_id:userID, item_expiration:expDate, item_id:friID, item_quantity:quanID},
+                		data:{item_user_id:userID, item_expiration:expDate, item_id:friID, item_quantity:quanID, general_id:genID},
                 		success: function(data) {
-                			$('#edit-modal').html(data)
+                      //console.log(data);
+                			$('#edit-modal').html(data);
                 		}
 
                 	});
@@ -853,12 +740,15 @@
 
 
                 // DELETE FUNCTION
-                $('#delete-item-submit').click(function() {
-
-                  var item_user_id = $('#user_id').val();
-                  var item_expiration = $('#expiration_date').val();
-                  var item_fridgelist_id = $('#fridgelist_id').val();
-                  var item_quantity = $('#quantity_id').val();
+                $('.delete-item-submit').click(function() {
+                  var general_id = $(this).attr('general_id');
+                  console.log(general_id);
+                  
+                  var item_user_id = $('#user_id'+ general_id).val();
+                  var item_expiration = $('#expiration_date'+ general_id).val();
+                  var item_fridgelist_id = $('#fridgelist_id'+ general_id).val();
+                  var item_quantity = $('#quantity_id'+ general_id).val();
+                  var genID = $('#general_id_' + general_id).val();
 
                   if(item_expiration != "" && item_fridgelist_id != "" && item_quantity != "") {
                     $.fancybox.close();
@@ -870,7 +760,7 @@
                     $.ajax({
                       url:"deleteitems.php",
                       method: "post",
-                      data: {item_user_id:item_user_id, item_expiration:item_expiration, item_fridgelist_id:item_fridgelist_id, item_quantity:item_quantity},
+                      data: {item_user_id:item_user_id, item_expiration:item_expiration, item_fridgelist_id:item_fridgelist_id, item_quantity:item_quantity, general_id:genID},
                       success: function(data) {
                         alert("Succesfully deleted from your fridge list")
                       }

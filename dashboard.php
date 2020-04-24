@@ -27,6 +27,19 @@
 
   $user_id = $row['user_id'];
 
+//************FOOD WASTE PERCENTAGE CALCULATION****************//
+  $sql_percent = "SELECT Round(SUM(quantity)/ SUM(og_quantity)*100,2) AS waste_percent, MONTHNAME(expiration_date) AS month 
+                  FROM mastersheet 
+                  WHERE user_id = $user_id AND expiration_date < CURRENT_DATE AND MONTH(expiration_date)= MONTH(CURRENT_DATE);";
+
+  $results_waste_percentage = $mysqli->query($sql_percent);
+    
+    if ( !$results_waste_percentage ) {
+        echo $mysqli->error;
+        $mysqli->close();
+        exit();
+    }
+
 //***********PAYTON'S***************//
   $sql_items = "SELECT * FROM fridgelists";
 
@@ -42,9 +55,11 @@
         FROM mastersheet
         LEFT JOIN fridgelists
               ON mastersheet.fridgelist_id=fridgelists.fridgelist_id
-              WHERE mastersheet.user_id=$user_id;";
+              WHERE mastersheet.user_id=$user_id AND mastersheet.expiration_date > CURRENT_DATE
+               ORDER BY expiration_date ASC;";
 
     $results_user_fridgelist = $mysqli->query($sql_user_fridgelist);
+
     if ( !$results_user_fridgelist ) {
         echo $mysqli->error;
         $mysqli->close();
@@ -144,6 +159,12 @@
       color:black;
     }
 
+    .percent-text{
+      margin-top: -6%;
+      color: gray;
+      font-weight: lighter;
+    }
+
     #yellow-tree-text{
       padding-left: 22%;
     }
@@ -234,158 +255,11 @@
                           <?php endif; ?>
 
                         </td>
-                        <!-- <td class="col-md-2">
-                          <img id="edit-item-submit" class="edit "alt="food" src="assets/img/edit.png">
-                        </td>
-                        <td class="col-md-2">
-                          <img id="delete-item-submit" class="delete" alt="food" src="assets/img/delete.png">
-                        </td> -->
                       </tr>
                       <?php endwhile; ?>
 
                     </tbody>
                   </table>
-  <!--**********************PAYTON'S***********-->
-
-                  <!-- <div id="scrollable">
-                  <table id="fridge-list" class="table">
-                    <tbody>
-                      <tr class="row align-items-center">
-                        <td class="col-md-3"><img class="food_pic" alt="food" src="assets/img/ingredients/mango.png"></td>
-                        <td class="col-md-4 align-middle">
-                          <div class="food-name">Mangos</div>
-                          <div class="food-count">5 Count</div>
-                        </td>
-                        <td class="col-md-3 date">
-                          <img class="clock_pic align-middle" alt="clocks" src="assets/img/clocks/Vector-1.png">
-                          <div class="red-clock exp-date">Feb. 28th</div>
-                        </td> -->
-                      <!--   <td class="col-md-1 align-middle">
-                          <button type="button" class="btn-sm btn-outline-warning edit">
-                            <span>Edit</span>
-                          </button>
-                        </td> -->
-                        <!-- <td class="col-md-2">
-                          <img class="delete" alt="food" src="assets/img/delete.png">
-                        </td>
-                      </tr>
-
-                      <tr class="row align-items-center">
-                        <td class="col-md-3">
-                          <img class="food_pic" alt="food" src="assets/img/ingredients/salmon.png">
-                        </td>
-                        <td class="col-md-4 align-middle">
-                          <div class="food-name">Salmon</div>
-                          <div class="food-count">5 ounces</div>
-                        </td>
-                        <td class="col-md-3 date">
-                          <img class="clock_pic align-middle" alt="clocks" src="assets/img/clocks/Vector-1.png">
-                          <div class="red-clock exp-date">Mar. 1st</div>
-                        </td>
-                        <td class="col-md-2">
-                          <img class="delete" alt="food" src="assets/img/delete.png">
-                        </td>
-                      </tr>
-
-                      <tr class="row align-items-center">
-                        <td class="col-md-3 align-middle">
-                          <img class="food_pic" alt="food" src="assets/img/ingredients/brussels-sprouts.png">
-                        </td>
-                        <td class="col-md-4 align-middle">
-                          <div class="food-name">Brussel Sprouts</div>
-                          <div class="food-count">10 ounces</div>
-                        </td>
-                        <td class="col-md-3 date">
-                          <img class="clock_pic align-middle" alt="clocks" src="assets/img/clocks/Vector-2.png"><div class="yellow-clock exp-date">Mar. 11th</div>
-                        </td>
-                        <td class="col-md-2">
-                          <img class="delete" alt="food" src="assets/img/delete.png">
-                        </td>
-                      </tr>
-
-                      <tr class="row align-items-center">
-                        <td class="col-md-3 align-middle">
-                          <img class="food_pic" alt="food" src="assets/img/ingredients/cherry.png">
-                        </td>
-                        <td class="col-md-4 align-middle">
-                          <div class="food-name">Cherries</div>
-                          <div class="food-count">1 lb.</div>
-                        </td>
-                        <td class="col-md-3 date">
-                          <img class="clock_pic align-middle" alt="clocks" src="assets/img/clocks/Vector-2.png">
-                          <div class="yellow-clock exp-date">Mar. 13th</div>
-                        </td>
-                        <td class="col-md-2">
-                          <img class="delete" alt="food" src="assets/img/delete.png">
-                        </td>
-                      </tr>
-
-                      <tr class="row align-items-center">
-                        <td class="col-md-3 align-middle">
-                          <img class="food_pic" alt="food" src="assets/img/ingredients/bread-1.png">
-                        </td>
-                        <td class="col-md-4 align-middle">
-                          <div class="food-name">French Bread</div>
-                          <div class="food-count">1 loaf (8 ounces)</div>
-                        </td>
-                        <td class="col-md-3 date">
-                          <img class="clock_pic align-middle" alt="clocks" src="assets/img/clocks/Vector-2.png"><div class="yellow-clock exp-date">Mar. 15th</div>
-                        </td>
-                        <td class="col-md-2">
-                          <img class="delete" alt="food" src="assets/img/delete.png">
-                        </td>
-                      </tr>
-
-                      <tr class="row align-items-center">
-                        <td class="col-md-3 align-middle">
-                          <img class="food_pic" alt="food" src="assets/img/ingredients/eggs.png">
-                        </td>
-                        <td class="col-md-4 align-middle">
-                          <div class="food-name">Eggs</div>
-                          <div class="food-count">1 dozen (20.5 ounces)</div>
-                        </td>
-                        <td class="col-md-3 date">
-                          <img class="clock_pic align-middle" alt="clocks" src="assets/img/clocks/Vector.png">
-                          <div class="green-clock exp-date">Mar. 19th</div>
-                        </td>
-                        <td class="col-md-2">
-                          <img class="delete" alt="food" src="assets/img/delete.png">
-                        </td>
-                      </tr>
-
-                      <tr class="row align-items-center">
-                        <td class="col-md-3 align-middle">
-                          <img class="food_pic" alt="food" src="assets/img/ingredients/garlic.png">
-                        </td>
-                        <td class="col-md-4 align-middle">
-                          <div class="food-name">Garlic</div>
-                          <div class="food-count">2 ounces</div>
-                        </td>
-                        <td class="col-md-3 date">
-                          <img class="clock_pic align-middle" alt="clocks" src="assets/img/clocks/Vector.png"><div class="green-clock exp-date">Apr. 4th</div>
-                        </td>
-                        <td class="col-md-2">
-                          <img class="delete" alt="food" src="assets/img/delete.png">
-                        </td>
-                      </tr>
-
-                      <tr class="row align-items-center">
-                        <td class="col-md-3 align-middle">
-                          <img class="food_pic" alt="food" src="assets/img/ingredients/bacon.png">
-                        </td>
-                        <td class="col-md-4 align-middle">
-                          <div class="food-name">Bacon</div>
-                          <div class="food-count">2 ounces</div>
-                        </td>
-                        <td class="col-md-3 date">
-                          <img class="clock_pic align-middle" alt="clocks" src="assets/img/clocks/Vector.png"><div class="green-clock exp-date">Apr. 7th</div>
-                        </td>
-                        <td class="col-md-2">
-                          <img class="delete" alt="food" src="assets/img/delete.png">
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table> -->
                 </div> <!--scrollable-->
                 </div>
           
@@ -406,28 +280,6 @@
             <div class="col-md-6">
               <h4>Money Wasted</h4>
             </div>
-         
-         <!--  <div class="dropdown col-md-2">
-              <button
-                class="btn btn-secondary dropdown-toggle"
-                type="button"
-                id="dropdownMenuButton"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                Last Year
-              </button>
-              <div
-                class="dropdown-menu"
-                aria-labelledby="dropdownMenuButton"
-              >
-                <a class="dropdown-item" href="#">Last Week</a>
-                <a class="dropdown-item" href="#">2 Weeks Ago</a>
-                <a class="dropdown-item" href="#">3 Weeks Ago</a>
-                <a class="dropdown-item" href="#">Last Month</a>
-              </div>
-            </div> --> <!--END of DROPDOWN-->
           </div><!--END OF TITLE GOALS AND AREA-->
       
 
@@ -436,10 +288,31 @@
           <div class="col-md-6" id="goals">
             <div id="main-tree">
               <p>The lower the waste percentage, the greener your tree gets</p>
-              <img id="displayed-tree"src="assets/img/dashboard/tree.png" alt="tree">
+              <!-- If waste % < 20 then img = tree1, 20-80% then img = tree2, 80 > tehn img =tree 3 -->
+              <?php 
+
+              $row_percent = $results_waste_percentage->fetch_assoc();
+              $percent = $row_percent['waste_percent'];
+
+
+              if($percent<20): ?> 
+                <img id="displayed-tree" src="assets/img/dashboard/tree.png" alt="tree">
+  
+
+              <?php elseif($percent >= 20 && $percent <= 80) : ?>
+                 <img id="displayed-tree" src="assets/img/dashboard/tree2.png" alt="tree">
+            
+
+              <?php elseif($percent > 80) : ?>
+               <img id="displayed-tree" src="assets/img/dashboard/tree3.png" alt="tree">
+              
+
+              <?php endif; ?>
+             
             </div><!--END of main-tree-->
             <div id="user-tree">
-              <p id="usertree" class="tree-text"><?php echo $row['user_firstname'];?>'s Tree</p>
+              <p id="usertree" class="tree-text"><?php echo $row['user_firstname'];?>'s <?php echo date(F,time()) ?> Tree </p>
+              <p id="percenttree" class="percent-text"> <?php echo $percent ?>% of your food was wasted this month</p>
             </div><!--END of user-tree-->
             <div id="sub-trees">
               <img id="tree1" class="sub-tree" src="assets/img/dashboard/tree.png" alt="tree">
@@ -451,32 +324,6 @@
               <div id="yellow-tree-text" class="waste-percentage"> 20% - 80% </div>
               <div id="bare-tree-text" class="waste-percentage"> > 80% </div>
             </div><!--END of subtree-description-->
-
-<!--               <div class="food-box">
-                <img class="goal-img" alt="food-img" src="assets/img/ingredients/bacon.png" />
-                <div class="food-title">
-                  Bacon
-                </div>
-                <div class="over-weight-mssg">
-                </div>
-                <div class="food-weight">
-                  1 lbs / <span class="goal-weight">1.5 lbs</span>
-                </div>End of FOOD-WEIGHT
-
-            </div> --><!--END of food-box
-
-              <div class="food-box">
-                <img class="goal-img" alt="food-img" src="assets/img/ingredients/garlic.png" />
-                <div class="food-title">
-                  Garlic
-                </div>
-                <div class="over-weight-mssg">
-                  1 oz over!
-                </div>
-                <div class="food-weight">
-                  5 oz / <span class="goal-weight">4 oz</span>
-                </div>End of FOOD-WEIGHT
-              </div>END of food-box -->
 
           </div><!--END of GOALS--> 
 

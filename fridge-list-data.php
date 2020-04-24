@@ -39,7 +39,6 @@ $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     exit();
   }
 
-  $item_row = $item_results->fetch_assoc(); 
 
   $events = [];
 
@@ -71,7 +70,7 @@ $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
   $events = json_encode($events,JSON_PRETTY_PRINT);
   echo $events;
-
+  // var_dump($item_row); 
   $mysqli->close();
 
 ?>

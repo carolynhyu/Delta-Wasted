@@ -8,6 +8,7 @@ if ( $mysqli->connect_errno ) {
   exit();
 }
 
+$general_id = $mysqli->escape_string($_POST['general_id']);
 $item_user_id = $mysqli->escape_string( $_POST['item_user_id'] );
 $item_expiration = $mysqli->escape_string( $_POST['item_expiration'] );
 $item_fridgelist_id = $mysqli->escape_string( $_POST['item_fridgelist_id'] );
@@ -15,6 +16,7 @@ $item_quantity = $mysqli->escape_string( $_POST['item_quantity'] );
 
 $email = $_SESSION['user_email'];
 $password = $_SESSION['user_password'];
+
 
 // $sql_user = "SELECT * FROM users WHERE user_email='$email' AND user_password='$password';";
 // $results_user = $mysqli->query($sql_user);
@@ -31,10 +33,13 @@ $password = $_SESSION['user_password'];
 
     // Find item based on values and delete from row
 $sql_delete = "DELETE FROM mastersheet
-        WHERE user_id=$item_user_id AND
-        fridgelist_id=$item_fridgelist_id AND
-        quantity=$item_quantity AND
-        expiration_date='$item_expiration';";
+            WHERE general_id = $general_id;";
+
+// $sql_delete = "DELETE FROM mastersheet
+//         WHERE user_id=$item_user_id AND
+//         fridgelist_id=$item_fridgelist_id AND
+//         quantity=$item_quantity AND
+//         expiration_date='$item_expiration';";
 
 $results_delete = $mysqli->query($sql_delete);
 

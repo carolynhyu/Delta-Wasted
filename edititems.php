@@ -1,22 +1,19 @@
 <?php
 
   // Check for required data.
-  if ( empty($_POST['track_name'])
-    || empty($_POST['media_type'])
-    || empty($_POST['genre'])
-    || empty($_POST['milliseconds'])
-    || empty($_POST['price'])
-    || empty($_POST['track_id'])
+  if ( empty($_POST['general_id']) 
+    || empty($_POST['item_weight'])
+    || empty($_POST['item_date'])
+    || empty($_POST['item_cost'])
+    || empty($_POST['item_og_weight'])
   ) {
     $error = "Please fill out all required fields.";
   } else {
-    $host = "304.itpwebdev.com";
-    $user = "";
-    $pass = "";
-    $db = "";
+    
+     require "config/config.php";
 
     // Establish MySQL Connection.
-    $mysqli = new mysqli($host, $user, $pass, $db);
+     $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
     // Check for any Connection Errors.
     if ( $mysqli->connect_errno ) {
@@ -24,36 +21,39 @@
       exit();
     }
 
-    $track = $_POST['track_name'];
-    $genre = $_POST['genre'];
-    $media_type_id = $_POST['media_type'];
-    $milliseconds = $_POST['milliseconds'];
-    $price = $_POST['price'];
+    $general_id = $_POST['general_id'];
+    $item_weight = $_POST['item_weight'];
+    $item_date = $_POST['item_date'];
+    $item_cost = $_POST['item_cost'];
+    $item_og_weight = $_POST['item_og_weight'];
 
-    if ( !empty($_POST['album']) ) {
-      $album = $_POST['album'];
-    } else {
-      $album = "null";
-    }
+    $ratio = $item_cost/$item_og_weight;
+    $new_cost = $ratio*$item_weight;
 
-    if ( !empty($_POST['bytes']) ) {
-      $bytes = $_POST['bytes'];
-    } else {
-      $bytes = "null";
-    }
+$email = $_SESSION['user_email'];
+$password = $_SESSION['user_password'];
 
-    if ( !empty($_POST['composer']) ) {
-      $composer = "'" . $_POST['composer'] . "'";   // 'Tommy Trojan'
-    } else {
-      $composer = "null"; // null
-    }
+$sql_user = "SELECT * FROM users WHERE user_email='$email' AND user_password='$password';";
 
-    $sql = "UPDATE tracks
-            SET name = '$track',
-            media_type_id = $media_type_id
-            WHERE track_id = " . $_POST['track_id'] . ";";
+$results_user = $mysqli->query($sql_user);
+if ( !$results_user ) {
+  echo $mysqli->error;
+  $mysqli->close();
+  exit();
+}
 
-    $results = $mysqli->query($sql);
+$row = $results_user->fetch_assoc();
+
+$user_id = $row['user_id'];
+
+$sql_update = "UPDATE mastersheet
+SET quantity = $item_weight,
+expiration_date = '$item_date',
+cost = $new_cost
+WHERE general_id = $general_id AND
+user_id = $user_id;";
+
+    $results = $mysqli->query($sql_update);
 
     if ( !$results ) {
       echo $mysqli->error;

@@ -14,10 +14,11 @@
   
     $mysqli->set_charset('utf8');
 
-$item_user_id = $_POST['item_user_id'];
-$item_expiration = "$_POST['item_expiration']";
-$item_fridgelist_id = $_POST['item_id'];
-$item_quantity = $_POST['item_quantity'];
+$general_id = $mysqli->escape_string($_POST['general_id']);
+$item_user_id = $mysqli->escape_string($_POST['item_user_id']);
+$item_expiration = $mysqli->escape_string($_POST['item_expiration']);
+$item_fridgelist_id = $mysqli->escape_string($_POST['item_id']);
+$item_quantity = $mysqli->escape_string($_POST['item_quantity']);
 
 
 $sql_edit = "SELECT *
@@ -50,9 +51,8 @@ $mysqli->close();
    
 
     $output .= 
-
-    '<div id="edit-modal" class="existing-modal" data-id=>
-    <div class="ingredient-image">
+// <div id="edit-modal" class="existing-modal" data-id=>
+    '<div class="ingredient-image">
           <img src="' . $row['img_url'] . '" />
         </div>
         <h4>' . $row['fridgelist_name'] . '</h4>
@@ -89,26 +89,12 @@ $mysqli->close();
           </div>
         </div>
 
-
-
-        <div class="inline-edit">
-          <div class="left-edit">
-            <h4>Cost ($)</h4>
-          </div>
-          <div class="right-edit">
             <input
               type="hidden"
               class="form-control currency-input existing-item"
               value="' . $row['cost'] . '"
             />
-          </div>
-        </div>
 
-        <div class="inline-edit weight-input">
-          <div class="left-edit">
-            <h4>Weight (oz)</h4>
-          </div>
-          <div class="right-edit">
             <input 
             type="hidden"
             class="form-control"
@@ -116,19 +102,21 @@ $mysqli->close();
             id="hidden-weight"
             value="' . $row['quantity'] . '"
           />
-          </div>
-          <div class="clear: both"></div>
-        </div>
-       
+
+          <input
+              type="hidden"
+              class="general_id"
+              value="' . $row['general_id'] . '"
+            />
 
         <button type="button" id="edit-submit" class="btn btn-primary button-after-inline-edit">
-          <span class="fa fa-check fa-fw mr-3"></span>Add ingredient
+          <span class="fa fa-check fa-fw mr-3"></span>Update ingredient
         </button>
         </form>
     
     
     ';
-    echo $sql_edit ."<br>";
+    // echo $sql_edit ."<br>";
     echo $output;
 
 
@@ -137,39 +125,25 @@ $mysqli->close();
 
 
 ?>
-<!--
+
 <script type="text/javascript">
-$(document).ready(function() {
-    
-$('.dropdown-item').click(function() {
-    let selection = $(this).html();
-    $(this).parent().prev().html(selection)
-    $(this).parent().prev().attr('temp-id', $(this).attr('temp-id'))
-    $('.edit-modal').attr('data-id', $(this).attr('item-id'))
-})
 
 $('#edit-submit').click(function() {
-
-    var item_id = $('.edit-modal').attr('data-id');
+    var general_id = $('.general_id').val();
     var item_weight = $('#weight').val();
     var item_date = $('.date-final').val();
     var item_cost = $('.currency-input.existing-item').val();
+    var item_og_weight = $('#hidden-weight').val();
 
     if(item_date != "" && item_weight != "" && item_cost != "") {
     $.fancybox.close();
-    var currentSingle = $('.edit-modal').attr("data-id")
-    $('.ingredient-inner[item-id="' + currentSingle + '"').addClass("selected")
-
-
-
-    console.log("id: ", item_id)
 
     $.ajax({
               url:"edititems.php",
               method: "post",
-              data: {item_id:item_id, item_weight:item_weight, item_date:item_date, item_cost:item_cost},
+              data: {item_weight:item_weight, item_date:item_date, item_cost:item_cost, item_og_weight:item_og_weight, general_id:general_id},
               success: function(data) {
-                alert("Succesfully added to your fridge list")
+                alert("Succesfully updated your fridge list item")
               }
 
             });
@@ -179,9 +153,7 @@ $('#edit-submit').click(function() {
         else {
             alert("Please fill out all required fields")
         }
-})
-
 });
 </script>
--->
+
 
