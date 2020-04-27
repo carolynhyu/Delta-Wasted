@@ -11,10 +11,14 @@
 
   $mysqli->set_charset('utf8');
 
+
 $email = $_SESSION['user_email'];
 $password = $_SESSION['user_password'];
-
 $sql_user = "SELECT * FROM users WHERE user_email='$email' AND user_password='$password';";
+// $userid = $mysqli->escape_string($_POST['sort']);
+
+// $sql_user = "SELECT * FROM users WHERE user_id='$userid';";
+
 $results_user = $mysqli->query($sql_user);
 if ( !$results_user ) {
   echo $mysqli->error;
@@ -73,7 +77,71 @@ if(mysqli_num_rows($results_items) > 0) {
           $dateSection ='<img class="clock_pic align-middle" alt="clocks" src="assets/img/clocks/Vector-3.png"><div class="black-clock exp-date">'. $newDate . '</div>';
         };
 
-        $output .= '<tr class="row align-items-center">
+        $output .= 
+
+        // '<tr class="row align-items-center">
+        //                 <input type="hidden" id="user_id_' .
+        //                 $row_table['general_id']; .
+        //                 '" value="' .
+        //                 $row_table['user_id']; .
+        //                 '"><input type="hidden" id="general_id_' .
+        //                $row_table['general_id']; .
+        //                 '" value="' .
+        //               $row_table['general_id']; .
+        //                 '">
+        //                 <input type="hidden" id="fridgelist_id_' .
+        //                 $row_table['general_id']; .
+        //                 '" value="' .
+        //                 $row_table['item_id'];.
+        //                 '">
+        //                 <td class="col-md-2"><img class="food_pic" alt="' .
+        //                 $row_table['fridgelist_name']; .
+        //                  ' " src="' .
+        //                 $row_table['image']; .
+        //                  '"></td>
+        //                 <td class="col-md-3 align-middle">
+        //                   <div class="food-name">' .
+        //                     $row_table['item']; .                             
+        //                     ' </div>
+        //                   <input type="hidden" id="quantity_id_'
+        //                   $row_table['general_id']; .
+        //                   '" value="' .
+        //                   $row_table['quantity']; .
+        //                   '">
+        //                   <div class="food-count">' .
+        //                     $row_table['quantity']; .
+        //                      'ounces</div>
+        //                 </td>
+        //                 <td class="col-md-3 date">
+        //                   <input type="hidden" id="expiration_date_' .
+        //                   $row_table['general_id']; .
+        //                   '" value="' .
+        //                   $row_table['date']; .
+        //                   '">
+
+        //                 </td>
+        //                 <td class="col-md-2">
+
+        //                     <a data-fancybox class="ope" data-src="#edit-modal">
+        //                       <img general_id="' 
+        //                       $row_table['general_id']; .
+        //                       '" class="edit edit-item-submit" alt="food" src="assets/img/edit.png">
+        //                     </a>
+
+        //                 </td>
+
+        //                 <td class="col-md-2">
+        //                   <img general_id="' 
+        //                   $row_table['general_id']; .
+        //                   '" class="delete delete-item-submit" alt="food" src="assets/img/delete.png">
+        //                 </td>
+        //               </tr>;'
+
+
+
+                      //////////////////////////////
+
+        '<tr class="row align-items-center">
                       <input type="hidden" id="user_id" value="' . 
                       $row_table['user_id'] . '
                       "><input type="hidden" id="fridgelist_id" value="' . 
@@ -99,6 +167,7 @@ if(mysqli_num_rows($results_items) > 0) {
 
       }
 }
+
 
 echo $output;
 

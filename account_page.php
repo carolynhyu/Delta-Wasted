@@ -39,17 +39,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <!-- Hotjar Tracking Code for http://460.itpwebdev.com/~bo/-daizhuwu -->
-<script>
-  (function(h,o,t,j,a,r){
-      h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-      h._hjSettings={hjid:1752462,hjsv:6};
-      a=o.getElementsByTagName('head')[0];
-      r=o.createElement('script');r.async=1;
-      r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-      a.appendChild(r);
-  })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-</script>
+
     <link rel="stylesheet" href="assets/css/bootstrap_nav.css" />
     <link
       rel="stylesheet"
@@ -89,14 +79,18 @@
               margin-top: 40px;
               margin-bottom: 40px;
             }
-            /* #navbar {
-              position: fixed;
-              top: 0;
-              bottom: 0;
-              left: 0;
 
-              background-color:#a0d468;
-            } */
+            .clearfix{
+              border-radius: 15px;
+            }
+
+            .buttons{
+              border-radius: 15px;
+              border-style: solid;
+              /*border-color: gray;*/
+              background-color: #a0d468;
+              color:white;
+            }
         </style>
   </head>
   <body>
@@ -148,8 +142,8 @@
                           <input type="password" placeholder="Password" name="new_psw" required>
                     
                           <div class="clearfix">
-                            <button type="submit">Save</button>
-                            <button type="reset">Reset</button>
+                            <button class="buttons" type="submit">Save</button>
+                            <button class="buttons" type="reset">Reset</button>
                           </div>
                         </div>
                       </form>

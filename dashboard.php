@@ -28,7 +28,7 @@
   $user_id = $row['user_id'];
 
 //************FOOD WASTE PERCENTAGE CALCULATION****************//
-  $sql_percent = "SELECT Round(SUM(quantity)/ SUM(og_quantity)*100,2) AS waste_percent, MONTHNAME(expiration_date) AS month 
+  $sql_percent = "SELECT SUM(quantity) AS waste_sum, Round(SUM(quantity)/ SUM(og_quantity)*100,2) AS waste_percent, MONTHNAME(expiration_date) AS month 
                   FROM mastersheet 
                   WHERE user_id = $user_id AND expiration_date < CURRENT_DATE AND MONTH(expiration_date)= MONTH(CURRENT_DATE);";
 
@@ -118,13 +118,14 @@
     }
 
     #fridge-list tr {
-      padding: 15px 0;
-      border-top: 15px solid #f5f5f5;
+      /*padding: 3px 0;*/
+      border-top: 5px solid #f5f5f5;
+      height: 90px;
     }
 
-    .food-name{
+   /* .food-name{
       font-weight:bold;
-    }
+    }*/
 
     .food_pic{
       padding-left: 11%;
@@ -211,17 +212,18 @@
                     <tbody id="tbody2">
 
                      <?php while ($row_table = $results_user_fridgelist->fetch_assoc() ) : ?> 
-                      <tr class="row align-items-center">
-                        <input type="hidden" id="user_id" value="<?php echo $row_table['user_id']; ?>">
-                        <input type="hidden" id="fridgelist_id" value="<?php echo $row_table['item_id']; ?>">
-                        <td class="col-md-5"><img class="food_pic" alt="<?php echo $row_table['fridgelist_name']; ?>" src="<?php echo $row_table['image']; ?>"></td>
-                        <td class="col-md-4 align-middle">
-                          <div class="food-name"><?php echo $row_table['item']; ?></div>
-                          <input type="hidden" id="quantity_id" value="<?php echo $row_table['quantity']; ?>">
-                          <div class="food-count"><?php echo $row_table['quantity']; ?> ounces</div>
-                        </td>
-                        <td class="col-md-3 date">
-                          <input type="hidden" id="expiration_date" value="<?php echo $row_table['date']; ?>">
+                        <?php if(!empty($row_table['user_id'])): ?>
+                          <tr class="row align-items-center">
+                            <input type="hidden" id="user_id" value="<?php echo $row_table['user_id']; ?>">
+                            <input type="hidden" id="fridgelist_id" value="<?php echo $row_table['item_id']; ?>">
+                            <td class="col-md-5"><img class="food_pic" alt="<?php echo $row_table['fridgelist_name']; ?>" src="<?php echo $row_table['image']; ?>"></td>
+                            <td class="col-md-4 align-middle">
+                              <div class="food-name"><?php echo $row_table['item']; ?></div>
+                              <input type="hidden" id="quantity_id" value="<?php echo $row_table['quantity']; ?>">
+                              <div class="food-count"><?php echo $row_table['quantity']; ?> ounces</div>
+                            </td>
+                            <td class="col-md-3 date">
+                              <input type="hidden" id="expiration_date" value="<?php echo $row_table['date']; ?>">
 
                           <?php
 
@@ -256,7 +258,17 @@
 
                         </td>
                       </tr>
-                      <?php endwhile; ?>
+
+<!--**********************************WHY U NO WORK*********************************-->
+                <?php else: ?>
+
+                  <div id="empty-fridgelist">
+                    <img src="assets/img/dashboard/fridge.png">
+                  </div>
+
+                <?php endif; ?>
+
+              <?php endwhile; ?>
 
                     </tbody>
                   </table>
@@ -264,6 +276,7 @@
                 </div>
           
               <!--Doughnut Chart-->
+
                  <div class="col-md-6" id="chartjs-wrapper"> 
                     <canvas id="myChart"></canvas>
                 </div>
@@ -294,26 +307,40 @@
               $row_percent = $results_waste_percentage->fetch_assoc();
               $percent = $row_percent['waste_percent'];
 
+             if($percent>0): ?>
 
-              if($percent<20): ?> 
-                <img id="displayed-tree" src="assets/img/dashboard/tree.png" alt="tree">
-  
+                    <?php 
+                    if($percent > 0 && $percent<20): ?> 
+                      <img id="displayed-tree" src="assets/img/dashboard/tree.png" alt="tree">
+        
 
-              <?php elseif($percent >= 20 && $percent <= 80) : ?>
-                 <img id="displayed-tree" src="assets/img/dashboard/tree2.png" alt="tree">
-            
+                    <?php elseif($percent >= 20 && $percent <= 80) : ?>
+                       <img id="displayed-tree" src="assets/img/dashboard/tree2.png" alt="tree">
+                  
 
-              <?php elseif($percent > 80) : ?>
-               <img id="displayed-tree" src="assets/img/dashboard/tree3.png" alt="tree">
-              
+                    <?php elseif($percent > 80) : ?>
+                     <img id="displayed-tree" src="assets/img/dashboard/tree3.png" alt="tree">
+                    
 
+                     <img id="displayed-tree" src="assets/img/dashboard/tree3.png" alt="tree">
+
+                    <?php endif; ?>
+                 
+                      </div><!--END of main-tree-->
+                      <div id="user-tree">
+                        <p id="usertree" class="tree-text"><?php echo $row['user_firstname'];?>'s <?php echo date(F,time()) ?> Tree </p>
+                        <p id="percenttree" class="percent-text"> <?php echo $percent ?>% of your food was wasted this month</p>
+                      </div><!--END of user-tree-->
+
+              <?php elseif($percent <= 0) :?>
+                  <img id="displayed-tree" src="assets/img/dashboard/tree.png" alt="tree">
+                  </div><!--END of main-tree-->
+                  <div id="user-tree">
+                    <p id="usertree" class="tree-text"><?php echo $row['user_firstname'];?>'s <?php echo date(F,time()) ?> Tree </p>
+                    <p id="percenttree" class="percent-text"> There isn't enough data to calculate food waste</p>
+                  </div><!--END of user-tree-->
               <?php endif; ?>
-             
-            </div><!--END of main-tree-->
-            <div id="user-tree">
-              <p id="usertree" class="tree-text"><?php echo $row['user_firstname'];?>'s <?php echo date(F,time()) ?> Tree </p>
-              <p id="percenttree" class="percent-text"> <?php echo $percent ?>% of your food was wasted this month</p>
-            </div><!--END of user-tree-->
+
             <div id="sub-trees">
               <img id="tree1" class="sub-tree" src="assets/img/dashboard/tree.png" alt="tree">
               <img id="tree2" class="sub-tree" src="assets/img/dashboard/tree2.png" alt="tree">
@@ -326,6 +353,11 @@
             </div><!--END of subtree-description-->
 
           </div><!--END of GOALS--> 
+
+          <?php 
+          $wasted_food = $results_waste_percentage->fetch_assoc()
+
+          ?>
 
           <div class="col-md-6" id="savings">
             <div class="row">
@@ -369,6 +401,22 @@
     ></script>
     <script src="assets/js/core.js"></script>
 
+
+    <!--*********************EMPTY DOUGHNUT CHART*********************-->
+    <script>
+    var ctx = document.getElementById('myEmptyChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: No Data,
+            datasets: [{
+                data: 0,
+                backgroundColor: 'rgb(160,212,104)'
+            }]
+        },
+        
+    });
+    </script>
     <!--*********************DOUGHNUT CHART*********************-->
     <script>
     var ctx = document.getElementById('myChart').getContext('2d');
