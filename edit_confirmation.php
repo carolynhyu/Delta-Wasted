@@ -1,3 +1,5 @@
+
+
 <?php
 	require "config/config.php";
 
@@ -14,7 +16,7 @@
 	if ( empty($_POST['current_psw']) || empty($_POST['new_psw']) ){
 			//create new variable $error
 			$error = "Please fill out both current password and new password.";
-	} else if ( $_POST['current_psw'] == $_POST['new_psw']){
+	} else if ( $_POST['new_psw'] == $_POST['user_password']){
 			$error = "New password can't be the same as existing password.";
 	} else if ( $_POST['current_psw'] != $row['user_password']){
 			$error = "Wrong current password.";
@@ -53,16 +55,18 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Edit Confirmation | New Password</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+	<style>
+
+	</style>
 </head>
 <body>
-	<!-- <div class="container"> -->
-		<!-- <div class="row">
-			<h1 class="col-12 mt-4">Edit a Football Game</h1>
-		</div> .row -->
-	<!-- </div>  -->
-	<div class="container">
-		<div class="row mt-4">
-			<div class="col-12">
+	 <?php include ('navbar.php'); ?>
+	<!-- -->
+        <div class="col-md-10 offset-md-2 hidePadding">
+          <div class="main-content add-ingredients">
+            <div class="container-fluid main-content-header">
+
 
 			<?php if(!empty($error)): ?>
 
@@ -70,21 +74,33 @@
 					<?php echo $error ?>
 				</div>
 
+				<div class="row mt-4 mb-4">
+					<div class="col-12">
+						<a href="account_page.php" role="button" class="btn btn-primary buttons">Back to Your Account</a>
+					</div> <!-- .col -->
+				</div> <!-- .row -->
+
 			<?php else : ?>
+
+				<?php
+ 					 session_start();
+  					session_destroy();
+				?>
 				
 				<div class="text-success">
 					Password was successfully updated.
-				</div>	
+				</div>
+
+				<div class="row mt-4 mb-4">
+					<div class="col-12">
+						<a href="login.php" role="button" class="btn btn-primary buttons">Log Back In</a>
+					</div> <!-- .col -->
+				</div> <!-- .row -->	
 
 			<?php endif; ?>
 
-			</div> <!-- .col -->
-		</div> <!-- .row -->
-		<div class="row mt-4 mb-4">
-			<div class="col-12">
-				<a href="account_page.php" role="button" class="btn btn-primary">Go back to Account Page</a>
-			</div> <!-- .col -->
-		</div> <!-- .row -->
-	</div> <!-- .container -->
+			</div>
+		</div>
+	</div>	
 </body>
 </html>
