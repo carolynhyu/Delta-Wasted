@@ -94,7 +94,7 @@
             console.log('event left!', info.event);
           },
 
-          events: window.location.origin + '/Delta-Wasted-develop/fridge-list-data.php'
+          events: '/~wasted//Delta-Wasted-develop/fridge-list-data.php'
 
         });
 

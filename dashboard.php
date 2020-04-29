@@ -41,7 +41,7 @@
     }
 
 //***********PAYTON'S***************//
-  $sql_items = "SELECT * FROM fridgelists";
+  $sql_items = "SELECT * FROM fridgelists;";
 
   $results_items = $mysqli->query($sql_items);
     if ( !$results_items ) {
@@ -51,7 +51,7 @@
     }
 
      //RETRIEVE SPECIFIC USER'S FRIDGE LIST ITEMS
-    $sql_user_fridgelist = "SELECT user_id, fridgelists.img_url AS image, fridgelists.fridgelist_name AS item, mastersheet.fridgelist_id AS item_id, mastersheet.quantity AS quantity, mastersheet.expiration_date AS date
+    $sql_user_fridgelist = "SELECT *, user_id, fridgelists.img_url AS image, fridgelists.fridgelist_name AS item, mastersheet.fridgelist_id AS item_id, mastersheet.quantity AS quantity, mastersheet.expiration_date AS date
         FROM mastersheet
         LEFT JOIN fridgelists
               ON mastersheet.fridgelist_id=fridgelists.fridgelist_id
@@ -212,7 +212,6 @@
                     <tbody id="tbody2">
 
                      <?php while ($row_table = $results_user_fridgelist->fetch_assoc() ) : ?> 
-                        <?php if(!empty($row_table['user_id'])): ?>
                           <tr class="row align-items-center">
                             <input type="hidden" id="user_id" value="<?php echo $row_table['user_id']; ?>">
                             <input type="hidden" id="fridgelist_id" value="<?php echo $row_table['item_id']; ?>">
@@ -258,15 +257,6 @@
 
                         </td>
                       </tr>
-
-<!--**********************************WHY U NO WORK*********************************-->
-                <?php else: ?>
-
-                  <div id="empty-fridgelist">
-                    <img src="assets/img/dashboard/fridge.png">
-                  </div>
-
-                <?php endif; ?>
 
               <?php endwhile; ?>
 
@@ -402,21 +392,6 @@
     <script src="assets/js/core.js"></script>
 
 
-    <!--*********************EMPTY DOUGHNUT CHART*********************-->
-    <script>
-    var ctx = document.getElementById('myEmptyChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: No Data,
-            datasets: [{
-                data: 0,
-                backgroundColor: 'rgb(160,212,104)'
-            }]
-        },
-        
-    });
-    </script>
     <!--*********************DOUGHNUT CHART*********************-->
     <script>
     var ctx = document.getElementById('myChart').getContext('2d');

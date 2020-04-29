@@ -16,7 +16,7 @@
 	if ( empty($_POST['current_psw']) || empty($_POST['new_psw']) ){
 			//create new variable $error
 			$error = "Please fill out both current password and new password.";
-	} else if ( $_POST['new_psw'] == $_POST['user_password']){
+	} else if ( $_POST['new_psw'] == $row['user_password']){
 			$error = "New password can't be the same as existing password.";
 	} else if ( $_POST['current_psw'] != $row['user_password']){
 			$error = "Wrong current password.";
