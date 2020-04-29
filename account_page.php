@@ -55,7 +55,7 @@
       crossorigin="anonymous"
     ></script>
 
-    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"
@@ -116,21 +116,6 @@
 
                         <form action="edit_confirmation.php" method="POST">  
                         <input type="hidden" name="user_id" value="<?php echo $row['user_id']; ?>">                    
-
-                          <h5>Account Information</h5>
-
-                          <!-- Pre-populate -->
-                          <label for="name"><b>First Name</b></label>
-                          <input type="text" placeholder="First Name" name="name" 
-                          value="<?php echo $row['user_firstname']; ?>" required>
-
-                          <label for="name"><b>Last Name</b></label>
-                          <input type="text" placeholder="Last Name" name="name" 
-                          value="<?php echo $row['user_lastname']; ?>" required>
-
-                          <label for="email"><b>Email</b></label>
-                          <input type="text" placeholder="Email" name="email" 
-                          value="<?php echo $row['user_email']; ?>" required>
 
                           <h5>Account Password</h5>
 
