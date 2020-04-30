@@ -94,7 +94,7 @@
             console.log('event left!', info.event);
           },
 
-          events: '/~wasted//Delta-Wasted-develop/fridge-list-data.php'
+          events: window.location.origin + '/~wasted/Delta-Wasted-develop/fridge-list-data.php'
 
         });
 
@@ -208,6 +208,19 @@
       cursor:pointer;
     }
 
+    .sort{
+      width:200px;
+    }
+
+    .annabelle {
+      margin-top: 30px;
+      padding-left: 15%;
+    }
+
+    .clearfloat{
+      clear: both;
+    }
+
 </style>
 
     <title>Wasted | Fridge List</title>
@@ -278,10 +291,13 @@
               aria-labelledby="dropdownMenuButton"
               >
                 
-                <a class="dropdown-item" sort-id="ascending">Ascending</a>
-                <a class="dropdown-item" sort-id="descending">Descending</a>
-                <a class="dropdown-item" sort-id="date-ascending">Expires quickest</a>
-                <a class="dropdown-item" sort-id="date-descending">Expires slowest</a>
+                <a class="annabelle" sort-id="ascending">Ascending</a>
+                <div class="clearfloat"></div>
+                <a class="annabelle" sort-id="descending">Descending</a>
+                <div class="clearfloat"></div>
+                <a class="annabelle" sort-id="date-ascending">Expires quickest</a>
+                <div class="clearfloat"></div>
+                <a class="annabelle" sort-id="date-descending">Expires slowest</a>
             </div>
           </div>
         <div style="display:none">
@@ -409,9 +425,10 @@
         <!--************EDIT FANCY BOX****************-->
 
                         </td>
-
                         <td class="col-md-2">
+                        
                           <img general_id="<?php echo $row_table['general_id']; ?>" class="delete delete-item-submit" alt="food" src="assets/img/delete.png">
+                          
                         </td>
                       </tr>
                       <?php endwhile; ?>
@@ -431,6 +448,7 @@
 
 <div style="display:none">
       <div id="edit-modal" class="existing-modal" data-id="" >
+        
       </div>
     </div>
         
@@ -499,7 +517,7 @@
                 });
 
                 // SORT ASCENDING FUNCTION
-                $('.dropdown-item').click(function() {
+                $('.annabelle').click(function() {
                   var sortId = $(this).attr('sort-id');                    
                     if (sortId == 'ascending') {
                       $.ajax({
@@ -582,12 +600,20 @@
                 $('.delete-item-submit').click(function() {
                   var general_id = $(this).attr('general_id');
                   console.log(general_id);
-                  
-                  var item_user_id = $('#user_id'+ general_id).val();
-                  var item_expiration = $('#expiration_date'+ general_id).val();
-                  var item_fridgelist_id = $('#fridgelist_id'+ general_id).val();
-                  var item_quantity = $('#quantity_id'+ general_id).val();
-                  var genID = $('#general_id_' + general_id).val();
+
+                  // var userID = $('#user_id_' + general_id).val();
+                  // var expDate = $('#expiration_date_' + general_id).val();
+                  // var friID = $('#fridgelist_id_' + general_id).val();
+                  // var quanID = $('#quantity_id_' + general_id).val();
+                  // var genID = $('#general_id_' + general_id).val();
+                  var item_user_id = $('#user_id_'+ general_id).val();
+                  var item_expiration = $('#expiration_date_'+ general_id).val();
+                  var item_fridgelist_id = $('#fridgelist_id_'+ general_id).val();
+                  var item_quantity = $('#quantity_id_'+ general_id).val();
+                  console.log(item_user_id);
+                  console.log(item_expiration);
+                  console.log(item_fridgelist_id);
+                  console.log(item_quantity);
 
                   if(item_expiration != "" && item_fridgelist_id != "" && item_quantity != "") {
                     $.fancybox.close();
@@ -599,7 +625,7 @@
                     $.ajax({
                       url:"deleteitems.php",
                       method: "post",
-                      data: {item_user_id:item_user_id, item_expiration:item_expiration, item_fridgelist_id:item_fridgelist_id, item_quantity:item_quantity, general_id:genID},
+                      data: {general_id:general_id, item_user_id:item_user_id, item_expiration:item_expiration, item_fridgelist_id:item_fridgelist_id, item_quantity:item_quantity},
                       success: function(data) {
                         alert("Succesfully deleted from your fridge list")
                       }
@@ -632,5 +658,12 @@
       crossorigin="anonymous"
     ></script>
     <script src="assets/js/core.js"></script>
+
+    <script>
+      // document.querySelector('#dropdownMenuButton1').onclick = function(){
+      //   console.log(<?php $row['category']?>);
+      // }
+    </script>
+
   </body>
 </html>

@@ -55,7 +55,7 @@
 
       $number_of_fridge_items = mysqli_num_rows($sql_check_fridgelist_id);
 
-      $new_fridgelist_id = $number_of_fridge_items;
+      $new_fridgelist_id = $number_of_fridge_items + 7;
 
       $sql_new_custom = "INSERT INTO `mastersheet` (`user_id`, `fridgelist_id`, `quantity`, `expiration_date`, `cost`, `og_quantity`) VALUES ('$user_id', '$new_fridgelist_id', '$custom_weight', '$custom_date', '$custom_cost', '$custom_weight')";
 
